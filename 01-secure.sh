@@ -4,7 +4,7 @@
 # Workshop : Les Fadas de l'IA
 #
 # Lancement (en root, première connexion) :
-#   bash <(curl -s https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/01-secure.sh)
+#   bash <(curl -s https://raw.githubusercontent.com/OPENCLAW_WORKSHOP_REPO/main/01-secure.sh)
 #
 
 set -e
@@ -88,16 +88,42 @@ visudo -c -f /etc/sudoers.d/90-fadas-agent > /dev/null
 
 echo
 echo "┌─────────────────────────────────────────────────────┐"
-echo "│  🔑 Collez votre clé SSH publique                   │"
-echo "│     (ssh-ed25519 ou ssh-rsa, une seule ligne)       │"
+echo "│  🔑 Génération + collage de votre clé SSH           │"
 echo "└─────────────────────────────────────────────────────┘"
+echo
+echo "  ⚠️  Ces commandes sont à taper sur VOTRE ORDINATEUR"
+echo "      (pas sur ce serveur). Ouvrez un nouveau terminal."
+echo
+echo "  ─── 🍎 Mac ─────────────────────────────────────────"
+echo
+echo "      ssh-keygen -t ed25519 -f ~/.ssh/$username -N \"\""
+echo "      cat ~/.ssh/$username.pub | pbcopy"
+echo "      echo \"✅ Clé copiée dans le presse-papier\""
+echo
+echo "  ─── 🐧 Linux ───────────────────────────────────────"
+echo
+echo "      ssh-keygen -t ed25519 -f ~/.ssh/$username -N \"\""
+echo "      cat ~/.ssh/$username.pub | xclip -selection clipboard"
+echo "      # ou : cat ~/.ssh/$username.pub  (puis copier à la main)"
+echo
+echo "  ─── 🪟 Windows (PowerShell) ────────────────────────"
+echo
+echo "      ssh-keygen -t ed25519 -f \$env:USERPROFILE\\.ssh\\$username -N '\"\"'"
+echo "      Get-Content \$env:USERPROFILE\\.ssh\\$username.pub | Set-Clipboard"
+echo
+echo "  ─────────────────────────────────────────────────────"
+echo
+echo "  Quand votre clé est dans le presse-papier :"
+echo "  → Revenez ici, clic droit → Coller → Entrée"
+echo
 
 while true; do
-  read -r -p "➡️  " ssh_key
+  read -r -p "➡️  Collez votre clé publique : " ssh_key
   if [[ "$ssh_key" =~ ^(ssh-rsa|ssh-ed25519|ecdsa-sha2-)[[:space:]]+[A-Za-z0-9+/=]+ ]]; then
     break
   fi
   echo "⛔ Format invalide. La clé doit commencer par ssh-ed25519, ssh-rsa ou ecdsa-..."
+  echo "   (Vérifiez que vous avez collé la clé .pub, pas la privée)"
 done
 
 mkdir -p /home/$username/.ssh
