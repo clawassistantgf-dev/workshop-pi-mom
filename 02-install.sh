@@ -19,9 +19,10 @@ if [ "$EUID" -eq 0 ]; then
   exit 1
 fi
 
-if ! sudo -n true 2>/dev/null; then
+if ! sudo -n apt-get --version >/dev/null 2>&1; then
   echo "⛔ L'utilisateur n'a pas les droits sudo nécessaires."
-  echo "   Vérifiez que le script 1 s'est bien terminé."
+  echo "   Vérifiez que le script 1 s'est bien terminé et a créé"
+  echo "   /etc/sudoers.d/90-fadas-agent"
   exit 1
 fi
 
