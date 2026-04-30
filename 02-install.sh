@@ -176,13 +176,20 @@ fi
 
 cd "$PI_MONO_DIR"
 
-# Installation des dépendances du monorepo
+# Installation des dépendances du monorepo (sans frozen-lockfile : pas de lockfile dans le repo)
 echo "⏳ Installation des dépendances du monorepo (pnpm install)..."
-pnpm install --frozen-lockfile 2>&1 | tail -5 || pnpm install 2>&1 | tail -5
+pnpm install 2>&1 | tail -5
 
-# Localiser le package pi-mom
+# Localiser le package pi-mom (Mario l'appelle "mom" dans son monorepo)
 PI_MOM_DIR=""
-for candidate in "$PI_MONO_DIR/packages/pi-mom" "$PI_MONO_DIR/apps/pi-mom" "$PI_MONO_DIR/pi-mom"; do
+for candidate in \
+  "$PI_MONO_DIR/packages/mom" \
+  "$PI_MONO_DIR/packages/pi-mom" \
+  "$PI_MONO_DIR/apps/pi-mom" \
+  "$PI_MONO_DIR/apps/mom" \
+  "$PI_MONO_DIR/pi-mom" \
+  "$PI_MONO_DIR/mom"
+do
   if [ -f "$candidate/package.json" ]; then
     PI_MOM_DIR="$candidate"
     break
@@ -300,11 +307,16 @@ else
   ALL_OK=0
 fi
 
-# pi-mom (version custom)
+# pi-mom (version custom — bin renommé dans le fork)
 if command -v pi-mom >/dev/null 2>&1; then
   echo "  ✓ pi-mom      installé ($(which pi-mom)) — version Les Fadas"
+elif command -v mom >/dev/null 2>&1; then
+  # Fallback : si le rename du bin n'a pas encore été fait dans le fork
+  echo "  ⚠ mom         installé ($(which mom)) — fork pas encore renommé"
+  echo "                 Pensez à renommer le \"bin\" en \"pi-mom\" dans"
+  echo "                 packages/mom/package.json du fork."
 else
-  echo "  ✗ pi-mom      ÉCHEC (binaire introuvable dans PATH)"
+  echo "  ✗ pi-mom/mom  ÉCHEC (binaire introuvable dans PATH)"
   ALL_OK=0
 fi
 
