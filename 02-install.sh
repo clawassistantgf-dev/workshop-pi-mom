@@ -173,14 +173,13 @@ fi
 
 echo "✓ pi-mom localisé : $PI_MOM_DIR"
 
-# Build du package
-cd "$PI_MOM_DIR"
-if grep -q '"build"' package.json; then
-  echo "⏳ Build du package pi-mom..."
-  npm run build 2>&1 | tail -3
-fi
+# Build le monorepo complet à la racine (ordre topologique requis)
+echo "⏳ Build du monorepo (~2-3 min)..."
+cd "$PI_MONO_DIR"
+npm run build 2>&1 | tail -10
 
-# Install global
+# Install global du package pi-mom buildé
+cd "$PI_MOM_DIR"
 echo "⏳ Install global de pi-mom..."
 npm install -g . --silent
 
