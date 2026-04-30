@@ -4,7 +4,7 @@
 # Workshop : Les Fadas de l'IA
 #
 # Lancement (depuis le user créé en script 1, PAS root) :
-#   bash <(curl -s https://raw.githubusercontent.com/OPENCLAW_WORKSHOP_REPO/main/02-install.sh)
+#   bash <(curl -s https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/02-install.sh)
 #
 
 set -e
@@ -44,7 +44,7 @@ echo
 # Configuration
 # ─────────────────────────────────────────────────────────
 
-PI_MONO_FORK_URL="https://github.com/GALOIS_PI_MONO_FORK.git"
+PI_MONO_FORK_URL="https://github.com/clawassistantgf-dev/pi-mono.git"
 PI_MONO_BRANCH="main"
 WORKSPACE="$HOME/agent-workspace"
 PI_MONO_DIR="$HOME/pi-mono-fadas"
