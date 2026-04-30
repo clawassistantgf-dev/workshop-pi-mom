@@ -275,6 +275,10 @@ else
   docker start "$SANDBOX_NAME" >/dev/null 2>&1 || true
 fi
 
+# Restart policy : le container survit aux reboots du serveur
+docker update --restart unless-stopped "$SANDBOX_NAME" >/dev/null 2>&1 || true
+echo "✓ Container configuré pour redémarrer au boot"
+
 # ─────────────────────────────────────────────────────────
 # 13. Service systemd user
 # ─────────────────────────────────────────────────────────
