@@ -4,7 +4,7 @@
 # Workshop : Les Fadas de l'IA
 #
 # Lancement (en root, première connexion) :
-#   bash <(curl -s https://raw.githubusercontent.com/OPENCLAW_WORKSHOP_REPO/main/01-secure.sh)
+#   bash <(curl -s https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/01-secure.sh)
 #
 
 set -e
