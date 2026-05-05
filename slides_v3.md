@@ -434,7 +434,7 @@ La première fois, SSH demande : <em>"Are you sure you want to continue connecti
 Une fois connecté, lancez le script de sécurisation :
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/01-secure.sh)
+curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/01-secure.sh -o /tmp/ws-pi-mom-01-secure.sh && bash /tmp/ws-pi-mom-01-secure.sh
 ```
 
 Le script demande :
@@ -451,7 +451,7 @@ Résultat : root désactivé · UFW actif · règle sudo prête pour le Script 2
 </div>
 
 <div v-click class="mt-2 text-xs text-gray-500 italic">
-  💡 <code>bash &lt;(curl -s URL)</code> = télécharge le script et l'exécute en une seule fois.
+  💡 Forme <strong>portable</strong> (évite l'erreur <code>/dev/fd/63</code> sur certains hébergeurs)&nbsp;: <code>curl -fsSL URL -o /tmp/script.sh &amp;&amp; bash /tmp/script.sh</code>. Alternative Bash uniquement&nbsp;: <code>bash &lt;(curl -fsSL URL)</code>.
 </div>
 
 ---
@@ -520,7 +520,7 @@ layout: default
 # Étape 5 — Script 2 : Installation
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/02-install.sh)
+curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/02-install.sh -o /tmp/ws-pi-mom-02-install.sh && bash /tmp/ws-pi-mom-02-install.sh
 ```
 
 <div class="mt-4 text-sm text-gray-500">
@@ -563,7 +563,7 @@ layout: default
 # Pendant que ça installe...
 
 <div class="text-sm text-gray-500 mb-4">
-  Le script tourne ~10 min. Bon moment pour expliquer ce qu'il fait — et la suite contient une bonne nouvelle.
+  Le script tourne souvent ~5–12 min. Bon moment pour expliquer ce qu'il fait — et la suite contient une bonne nouvelle.
 </div>
 
 <div class="space-y-3">
@@ -717,7 +717,7 @@ layout: default
 # Étape 7 — Script 3 : Configuration
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/03-configure.sh)
+curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/03-configure.sh -o /tmp/ws-pi-mom-03-configure.sh && bash /tmp/ws-pi-mom-03-configure.sh
 ```
 
 <div class="mt-4 space-y-2 text-sm">

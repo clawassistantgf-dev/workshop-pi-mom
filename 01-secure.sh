@@ -3,8 +3,8 @@
 # 01-secure.sh — Sécurisation initiale du serveur
 # Workshop : Les Fadas de l'IA
 #
-# Lancement (en root, première connexion) :
-#   bash <(curl -s https://raw.githubusercontent.com/OPENCLAW_WORKSHOP_REPO/main/01-secure.sh)
+# Lancement (en root, première connexion) — préférer curl vers un fichier (évite /dev/fd/... sur certains hôtes) :
+#   curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/01-secure.sh -o /tmp/ws-pi-mom-01-secure.sh && bash /tmp/ws-pi-mom-01-secure.sh
 #
 
 set -e

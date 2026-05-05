@@ -3,6 +3,10 @@
 # 02-install.sh — Installation de la stack agent
 # Workshop : Les Fadas de l'IA
 #
+# Lancement :
+#   curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/02-install.sh -o /tmp/ws-pi-mom-02-install.sh && bash /tmp/ws-pi-mom-02-install.sh
+# (évite bash <(curl) / /dev/fd/… sur certains hébergeurs)
+#
 
 set -e
 

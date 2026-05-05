@@ -3,6 +3,9 @@
 # 03-configure.sh — Configuration finale et démarrage de l'agent
 # Workshop : Les Fadas de l'IA
 #
+# Lancement :
+#   curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/03-configure.sh -o /tmp/ws-pi-mom-03-configure.sh && bash /tmp/ws-pi-mom-03-configure.sh
+#
 
 set -e
 
