@@ -524,7 +524,7 @@ bash <(curl -s https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi
 ```
 
 <div class="mt-4 text-sm text-gray-500">
-  ⏳ ~8-14 minutes (le build de pi-mom prend ~5 min). Le script est <strong>idempotent</strong> — relançable sans danger.
+  ⏳ ~5-12 minutes (install npm ciblée + build sans tui/web-ui). Le script est <strong>idempotent</strong> — relançable sans danger.
 </div>
 
 <div class="mt-6 grid grid-cols-2 gap-3 text-sm">

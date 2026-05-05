@@ -25,7 +25,7 @@ echo "┌───────────────────────�
 echo "│  📦  Installation de la stack agent                │"
 echo "└───────────────────────────────────────────────────┘"
 echo
-echo "  Durée estimée : 8-14 minutes"
+echo "  Durée estimée : ~5-12 minutes (selon CPU / réseau ; install npm ciblée)"
 echo "─────────────────────────────────────────────────────"
 echo
 
@@ -129,7 +129,7 @@ npm install -g @mariozechner/pi-coding-agent --silent
 
 echo
 echo "─────────────────────────────────────────────────────"
-echo "  🦞 Build de pi-mom version Les Fadas (~5 min)"
+echo "  🦞 Build de pi-mom version Les Fadas (parcours léger)"
 echo "─────────────────────────────────────────────────────"
 echo
 
@@ -147,11 +147,7 @@ fi
 
 cd "$PI_MONO_DIR"
 
-# Le repo utilise npm workspaces (package-lock.json présent à la racine)
-echo "⏳ Installation des dépendances du monorepo (npm install)..."
-npm install --no-fund --no-audit 2>&1 | tail -5
-
-# Localiser le package pi-mom (Mario l'appelle "mom")
+# Localiser le package pi-mom avant npm install (pour npm install -w <nom>)
 PI_MOM_DIR=""
 for candidate in \
   "$PI_MONO_DIR/packages/mom" \
@@ -167,16 +163,32 @@ done
 
 if [ -z "$PI_MOM_DIR" ]; then
   echo "⛔ Impossible de trouver le package pi-mom dans $PI_MONO_DIR"
-  find "$PI_MONO_DIR" -name "package.json" -not -path "*/node_modules/*" | head -10
+  find "$PI_MONO_DIR" -maxdepth 6 -name "package.json" -not -path "*/node_modules/*" | head -10
   exit 1
 fi
 
 echo "✓ pi-mom localisé : $PI_MOM_DIR"
 
-# Build le monorepo complet à la racine (ordre topologique requis)
-echo "⏳ Build du monorepo (~2-3 min)..."
-cd "$PI_MONO_DIR"
-npm run build 2>&1 | tail -10
+WORKSPACE_PKG_NAME="$(cd "$PI_MOM_DIR" && node -p "require('./package.json').name")"
+echo "⏳ npm install (workspace $WORKSPACE_PKG_NAME + dépendances)..."
+# Pas de pipe vers tail : cela bufferise toute la sortie (lent, grosse RAM sur serveur).
+export CI="${CI:-}"
+if ! npm install -w "$WORKSPACE_PKG_NAME" --no-fund --no-audit --loglevel=warn; then
+  echo "⚠  npm -w impossible (npm trop ancien ou lock différent ?), installation monorepo complète..."
+  npm install --no-fund --no-audit --loglevel=warn
+fi
+
+echo "⏳ Build ciblé (ai → agent → coding-agent → mom), sans tui/web-ui..."
+for pkg in packages/ai packages/agent packages/coding-agent; do
+  if [ ! -f "$PI_MONO_DIR/$pkg/package.json" ]; then
+    echo "⛔ Manquant : $PI_MONO_DIR/$pkg"
+    exit 1
+  fi
+  echo "   → $pkg"
+  (cd "$PI_MONO_DIR/$pkg" && npm run build)
+done
+echo "   → $PI_MOM_DIR"
+(cd "$PI_MOM_DIR" && npm run build)
 
 # Install global du package pi-mom buildé
 cd "$PI_MOM_DIR"
