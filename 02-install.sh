@@ -182,8 +182,9 @@ if ! npm install -w "$WORKSPACE_PKG_NAME" --no-fund --no-audit --loglevel=warn; 
   npm install --no-fund --no-audit --loglevel=warn
 fi
 
-echo "⏳ Build ciblé (ai → agent → coding-agent → mom), sans tui/web-ui..."
-for pkg in packages/ai packages/agent packages/coding-agent; do
+# coding-agent importe @mariozechner/pi-tui — il faut son dist avant le build ; web-ui reste exclu pour gagner du temps côté Mom.
+echo "⏳ Build ciblé (ai → agent → tui → coding-agent → mom), sans web-ui..."
+for pkg in packages/ai packages/agent packages/tui packages/coding-agent; do
   if [ ! -f "$PI_MONO_DIR/$pkg/package.json" ]; then
     echo "⛔ Manquant : $PI_MONO_DIR/$pkg"
     exit 1

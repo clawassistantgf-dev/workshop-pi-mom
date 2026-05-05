@@ -524,7 +524,7 @@ curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom
 ```
 
 <div class="mt-4 text-sm text-gray-500">
-  ⏳ ~5-12 minutes (install npm ciblée + build sans tui/web-ui). Le script est <strong>idempotent</strong> — relançable sans danger.
+  ⏳ ~5-12 minutes (install npm ciblée + build sans web-ui ; <code>pi-tui</code> est requis pour compiler <code>coding-agent</code>). Le script est <strong>idempotent</strong> — relançable sans danger.
 </div>
 
 <div class="mt-6 grid grid-cols-2 gap-3 text-sm">
