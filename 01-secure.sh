@@ -3,8 +3,9 @@
 # 01-secure.sh — Sécurisation initiale du serveur
 # Workshop : Les Fadas de l'IA
 #
-# Lancement (en root, première connexion) — préférer curl vers un fichier (évite /dev/fd/... sur certains hôtes) :
-#   curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/01-secure.sh -o /tmp/ws-pi-mom-01-secure.sh && bash /tmp/ws-pi-mom-01-secure.sh
+# Lancement (en root, première connexion) :
+#   curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/01-secure.sh -o "$HOME/ws-pi-mom-01-secure.sh" && bash "$HOME/ws-pi-mom-01-secure.sh"
+# (préférer $HOME à /tmp si « curl (23) Failure writing to destination »)
 #
 
 set -e
@@ -13,6 +14,14 @@ set -o pipefail
 # Vérifie si le script est exécuté en tant que root
 if [ "$EUID" -ne 0 ]; then
   echo "⛔ Ce script doit être exécuté en tant que root."
+  echo
+  echo "  Sur le VPS (Hostinger), étape prévue avant le script 2 :"
+  echo "    1) ssh root@VOTRE_IP   # mot de passe dans l’e-mail VPS"
+  echo "    2) puis : curl … -o \"\$HOME/ws-pi-mom-01-secure.sh\" && bash \"\$HOME/ws-pi-mom-01-secure.sh\""
+  echo
+  echo "  Avec sudo sur un compte admin (après avoir enregistré le script sur disque) :"
+  echo "    sudo bash /root/ws-pi-mom-01-secure.sh"
+  echo
   exit 1
 fi
 

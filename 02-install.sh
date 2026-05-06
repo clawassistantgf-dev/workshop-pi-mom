@@ -179,13 +179,30 @@ fi
 
 echo "✓ pi-mom localisé : $PI_MOM_DIR"
 
+# Husky : le « prepare » racine lance souvent `husky` — binaire absent sur VPS atelier → erreur 127.
+# HUSKY=0 ne suffit pas si le script shell appelle quand même « husky ». On retire prepare(husky) du package.json racine.
+echo "⏳ Contournement « husky » pour npm install (atelier)…"
+node <<'NODE_STRIP'
+const fs = require("fs");
+const f = "package.json";
+if (!fs.existsSync(f)) process.exit(0);
+const pkg = JSON.parse(fs.readFileSync(f, "utf8"));
+const prep = pkg.scripts && pkg.scripts.prepare != null ? String(pkg.scripts.prepare) : "";
+if (/\bhusky\b/.test(prep)) {
+  console.log('   → scripts.prepare contient husky : retiré le temps de npm install (inutile au build).');
+  delete pkg.scripts.prepare;
+  if (pkg.scripts && Object.keys(pkg.scripts).length === 0) delete pkg.scripts;
+  fs.writeFileSync(f, JSON.stringify(pkg, null, 2) + "\n");
+}
+NODE_STRIP
+
 WORKSPACE_PKG_NAME="$(cd "$PI_MOM_DIR" && node -p "require('./package.json').name")"
 echo "⏳ npm install (workspace $WORKSPACE_PKG_NAME + dépendances)..."
 # Pas de pipe vers tail : cela bufferise toute la sortie (lent, grosse RAM sur serveur).
 export CI="${CI:-}"
-if ! npm install -w "$WORKSPACE_PKG_NAME" --no-fund --no-audit --loglevel=warn; then
+if ! env HUSKY=0 npm install -w "$WORKSPACE_PKG_NAME" --no-fund --no-audit --loglevel=warn; then
   echo "⚠  npm -w impossible (npm trop ancien ou lock différent ?), installation monorepo complète..."
-  npm install --no-fund --no-audit --loglevel=warn
+  env HUSKY=0 npm install --no-fund --no-audit --loglevel=warn
 fi
 
 # Sans web-ui (gain de temps). Si la structure du fork change, repli sur « npm run build » racine.

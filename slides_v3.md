@@ -520,11 +520,14 @@ La première fois, SSH demande : <em>"Are you sure you want to continue connecti
 → Tapez <strong>yes</strong> en entier puis Entrée. Puis collez le mot de passe root (rien ne s'affiche, c'est normal).
 </div>
 
-Une fois connecté, lancez le script de sécurisation :
+Dans **le même terminal** que votre session SSH **root sur le VPS** (invite du type <code>root@votre-serveur:~#</code>), lancez le script de sécurisation :
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/01-secure.sh -o /tmp/ws-pi-mom-01-secure.sh && bash /tmp/ws-pi-mom-01-secure.sh
+# whoami doit afficher « root » · téléchargement sous $HOME limite « curl (23) » quand /tmp pose problème
+curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/01-secure.sh -o "$HOME/ws-pi-mom-01-secure.sh" && bash "$HOME/ws-pi-mom-01-secure.sh"
 ```
+
+Si <code>curl</code> affiche encore <code>(23) Failure writing</code> : <code>df -h</code> (disque plein ?), puis essayez <code>-o /root/ws-pi-mom-01-secure.sh</code> à la place de <code>"$HOME/…"</code>.
 
 Le script demande :
 - **Nom de votre agent** *(sera votre user Linux)*
@@ -540,7 +543,7 @@ Résultat : root désactivé · UFW actif · règle sudo prête pour le Script 2
 </div>
 
 <div v-click class="mt-2 text-xs text-gray-500 italic">
-  💡 Même méthode que le script&nbsp;2 : fichier dans <code>/tmp</code> puis <code>bash</code> (évite <code>/dev/fd/…</code> sur certains hébergeurs).
+  💡 Une commande <code>curl … -o … && bash …</code> évite les soucis de <code>/dev/fd/…</code>. Pour le script&nbsp;1, la cible sous <strong><code>$HOME</code></strong> réduit les erreurs d’écriture sur certains VPS ; pour le&nbsp;2, <code>/tmp</code> reste indiqué si ça passe chez vous.
 </div>
 
 ---
@@ -613,7 +616,7 @@ curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom
 ```
 
 <div class="mt-4 text-sm text-gray-500">
-  ⏳ ~8-16 minutes (npm workspaces + compilation <code>pi-tui</code> puis <code>coding-agent</code>). Le script est <strong>idempotent</strong> — relançable sans danger (<code>HUSKY=0</code> évite les erreurs « husky not found » sur le VPS).
+  ⏳ ~8-16 minutes (npm workspaces + compilation <code>pi-tui</code> puis <code>coding-agent</code>). Le script est <strong>idempotent</strong> — relançable sans danger. Le hook <code>prepare</code> <strong>husky</strong> du monorepo est neutralisé sur le VPS (sinon erreur&nbsp;127) ; pareil&nbsp;: <code>HUSKY=0</code>.
 </div>
 
 <div class="mt-6 grid grid-cols-2 gap-3 text-sm">
