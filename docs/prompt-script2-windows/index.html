@@ -7,20 +7,23 @@
   <title>Déblocage script 2 · pi-mom · Windows</title>
   <style>
     :root {
-      --bg: #0f1419;
-      --panel: #1a2332;
-      --text: #e7ecf3;
-      --muted: #8b98a9;
-      --accent: #3d9cf0;
-      --accent-hover: #5aadff;
-      --success: #3ecf8e;
+      --bg: #f4f6f9;
+      --panel: #ffffff;
+      --text: #1c2430;
+      --muted: #5a6674;
+      --accent: #1a6fd5;
+      --accent-hover: #155bb3;
+      --success: #0d8a4e;
+      --border: #dde3eb;
+      --chatgpt: #10a37f;
+      --chatgpt-hover: #0d8f6e;
       --radius: 10px;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-      background: radial-gradient(1200px 800px at 20% -10%, #1e3a5f 0%, var(--bg) 55%);
+      background: linear-gradient(165deg, #fafbfc 0%, var(--bg) 45%, #eef1f6 100%);
       color: var(--text);
       min-height: 100vh;
       line-height: 1.55;
@@ -45,56 +48,50 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.65rem;
-      margin: 1.35rem 0 1rem;
+      margin: 1.35rem 0 0.75rem;
     }
     button, .btn-link {
       font: inherit;
       cursor: pointer;
       border-radius: var(--radius);
-      padding: 0.65rem 1.1rem;
+      padding: 0.65rem 1.15rem;
       border: none;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.45rem;
       font-weight: 600;
       font-size: 0.95rem;
-      transition: background 0.15s, transform 0.08s;
+      transition: background 0.15s, transform 0.08s, border-color 0.15s;
     }
     button:active, .btn-link:active {
       transform: scale(0.98);
     }
     .btn-primary {
       background: var(--accent);
-      color: #041018;
+      color: #fff;
     }
     .btn-primary:hover {
       background: var(--accent-hover);
     }
-    .btn-primary:disabled,
-    .btn-ghost:disabled {
+    .btn-primary:disabled {
       opacity: 0.65;
       cursor: wait;
     }
-    .btn-secondary {
-      background: var(--panel);
-      color: var(--text);
-      border: 1px solid #2d3d52;
+    .btn-chatgpt {
+      background: var(--chatgpt);
+      color: #fff;
+      border: 1px solid transparent;
     }
-    .btn-ghost {
-      background: transparent;
-      color: var(--accent);
-      border: 1px dashed rgba(61, 156, 240, 0.45);
-    }
-    .btn-ghost:hover {
-      background: rgba(61, 156, 240, 0.12);
-      border-color: var(--accent);
+    .btn-chatgpt:hover {
+      background: var(--chatgpt-hover);
     }
     .toast {
       min-height: 1.35rem;
       font-size: 0.875rem;
       color: var(--success);
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.6rem;
       opacity: 0;
       transition: opacity 0.2s;
     }
@@ -106,14 +103,28 @@
       color: var(--muted);
       margin: 0 0 1rem;
     }
+    .prompt-stack {
+      margin-top: 0.25rem;
+    }
+    .copy-mark {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+      color: var(--muted);
+    }
+    .copy-mark svg {
+      width: 28px;
+      height: 28px;
+      opacity: 0.85;
+    }
     .panel {
       background: var(--panel);
-      border: 1px solid #273546;
+      border: 1px solid var(--border);
       border-radius: calc(var(--radius) + 2px);
       padding: 1rem 1.1rem;
       max-height: min(420px, 50vh);
       overflow: auto;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 2px 12px rgba(28, 36, 48, 0.06);
     }
     .panel pre {
       margin: 0;
@@ -122,7 +133,7 @@
       font-family: ui-monospace, "Cascadia Code", "Segoe UI Mono", monospace;
       font-size: 0.78rem;
       line-height: 1.5;
-      color: #cdd8ea;
+      color: #2c3540;
     }
     footer {
       margin-top: 1.75rem;
@@ -137,8 +148,9 @@
       font-size: 0.82em;
       padding: 0.12rem 0.35rem;
       border-radius: 4px;
-      background: #243044;
-      border: 1px solid #3d5270;
+      background: #eef1f5;
+      border: 1px solid var(--border);
+      color: var(--text);
     }
   </style>
 </head>
@@ -151,20 +163,25 @@
 
     <div class="actions">
       <button type="button" class="btn-primary" id="btn-copy" aria-describedby="toast">
-        Copier le prompt
+        Copier
       </button>
-      <button type="button" class="btn-ghost" id="btn-copy-open">
-        Copier puis ouvrir ChatGPT
-      </button>
-      <a class="btn-secondary btn-link" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">
-        Ouvrir ChatGPT seul
+      <a class="btn-chatgpt btn-link" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">
+        ChatGPT
       </a>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <p class="hint">Après avoir ouvert ChatGPT : si vous n’avez pas une zone vide en bas pour écrire, cliquez <strong>Nouvelle discussion</strong> (sidebar) ou utilisez le raccourci <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd> sous Windows.<br />Si « Copier » échoue (page ouverte en <code>file://</code>), ouvrez ce site avec <code>python -m http.server</code>, <code>npx serve</code> ou via GitHub Pages.</p>
+    <p class="hint">Dans ChatGPT : <strong>Nouvelle discussion</strong> si besoin — raccourci Windows <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd>. Copie : ouvrir la page en <code>http://</code> ou <code>https://</code> (pas <code>file://</code>).</p>
 
-    <div class="panel" aria-label="Aperçu du prompt">
-      <pre id="preview"></pre>
+    <div class="prompt-stack">
+      <div class="copy-mark" aria-hidden="true" title="À copier">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+          <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+        </svg>
+      </div>
+      <div class="panel" aria-label="Aperçu du prompt">
+        <pre id="preview"></pre>
+      </div>
     </div>
 
     <footer>
@@ -239,7 +256,6 @@ MON ÉTAT ACTUEL (à remplir par moi après ton premier message)
       var preview = document.getElementById("preview");
       var btnCopy = document.getElementById("btn-copy");
       var toast = document.getElementById("toast");
-      var btnCopyOpen = document.getElementById("btn-copy-open");
 
       preview.textContent = text;
 
@@ -249,10 +265,6 @@ MON ÉTAT ACTUEL (à remplir par moi après ton premier message)
           return true;
         }
         return fallbackCopy(txt);
-      }
-
-      function openChatGpt() {
-        return window.open("https://chatgpt.com/", "_blank", "noopener,noreferrer");
       }
       function fallbackCopy(txt) {
         var ta = document.createElement("textarea");
@@ -298,28 +310,6 @@ MON ÉTAT ACTUEL (à remplir par moi après ton premier message)
           }
         } finally {
           btnCopy.disabled = false;
-        }
-      });
-
-      btnCopyOpen.addEventListener("click", async function () {
-        btnCopyOpen.disabled = true;
-        var popup = openChatGpt();
-        try {
-          var ok = false;
-          try {
-            ok = await writeClipboard(text);
-          } catch (_e1) {
-            ok = fallbackCopy(text);
-          }
-          if (ok && popup) {
-            showToast("Copié — nouvel onglet ChatGPT. Nouvelle discussion : Ctrl+Shift+O ou la barre latérale.");
-          } else if (ok && !popup) {
-            showToast("Copié — le navigateur a bloqué ChatGPT ; cliquez « Ouvrir ChatGPT seul » ou autorisez les pop-ups.");
-          } else {
-            showToast("Copie impossible ici — ouvrez en https / localhost, ou copiez depuis l’encadré.");
-          }
-        } finally {
-          btnCopyOpen.disabled = false;
         }
       });
     })();
