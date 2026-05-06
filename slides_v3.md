@@ -775,57 +775,71 @@ layout: default
 layout: default
 ---
 
-# Étape 6 — pi /login
+# Étape 6 — pi /login (OAuth)
 
-**Votre agent rencontre son cerveau**
+<div class="text-base leading-snug text-gray-600 mb-3">
+  Votre agent rencontre son cerveau — flux commun à tous les providers.
+</div>
 
 ```bash
 pi
 ```
 
-Puis dans l’interface pi :
-
-```
-/login
-```
-
-Choisir votre fournisseur *(ChatGPT / Gemini / GitHub Copilot / …)*. **Tous les OAuth** suivent la même logique : **URL du terminal → navigateur → URL localhost dans la barre d’adresse → vous la collez dans la fenêtre SSH où tourne pi**.
-
-<v-clicks>
-
-1. **Une URL longue** apparaît dans le terminal → **copiez-la entièrement** (aucun provider ne doit avoir une URL coupée à la souris ou au terminal).
-2. Ouvrez-la dans le navigateur de **votre ordinateur** et connectez-vous ; **autorisez** l’accès côté fournisseur.
-3. Le navigateur affiche alors une redirection du type <code>http://127.0.0.1:</code>… ou <code>http://localhost:</code>… → **copiez cette URL complète** depuis la barre d’adresse *(c’est celle qu’il faut recoller dans le terminal)*.
-4. Dans la **session SSH** où <code>pi</code> est lancé, **collez** cette URL lorsque pi la demande.
-5. Une fois terminé : <code>Ctrl+C</code> pour quitter pi si vous en avez terminé avec le test.
-
-</v-clicks>
-
-### GitHub Copilot — précisions
-
-<v-clicks>
-
-- **a)** Invite <em>« GitHub Enterprise URL/domain »</em> pour **github.com** : laissez le champ **vide** puis **Entrée** *(Copilot Individual / compte standard)*.
-- **b)** Copiez **intégralement** l’URL OAuth sortie dans le terminal — même principe **pour tous les logins**.
-- **c)** Après validation sur GitHub, reprenez la **locale** <code>http://127.0.0.1:…</code> / <code>localhost…</code> du navigateur et collez-la dans pi comme aux étapes ci-dessus.
-
-</v-clicks>
-
-### Modèle et test rapide
-
-<v-clicks>
-
-- <code>Ctrl+L</code> : **liste / choix du modèle** *(le bandeau d’aide de pi liste les raccourcis disponibles selon votre build)*.
-- Posez une **question de test** pour vérifier que le fournisseur répond.
-
-</v-clicks>
-
-<div v-click class="mt-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-sm text-amber-900">
-  <strong>Ensuite — Étape&nbsp;7 Script&nbsp;3</strong> : tokens Slack, fichier <code>.keys</code>, service systemd pour pi-mom, etc. Le script&nbsp;3 vérifie la présence de <code>~/.pi/agent/auth.json</code> après ce <code>/login</code>.
+<div class="text-lg mt-2">
+Ensuite taper <code>/login</code> puis choisir le fournisseur (ChatGPT, Gemini, **Copilot**, …).
 </div>
 
-<div v-click class="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-sm text-blue-700">
-  OAuth : pas de clé API dans le VPS — vous utilisez l’abonnement du fournisseur.
+<div class="mt-3 text-base text-gray-600 leading-snug">
+  <strong>Résumé</strong> : URL du terminal → navigateur PC → redirection <strong>localhost</strong> dans la barre → recoller dans la session SSH où <code>pi</code> tourne.
+</div>
+
+<v-clicks>
+
+<div class="mt-4 text-lg leading-snug space-y-3">
+
+1. **Copier l’URL complète** affichée par pi (sans la tronquer).
+
+2. Navigateur **sur votre PC** → connexion au provider → **Autoriser**.
+
+3. Dans la barre d’adresse : copier <code>http://127.0.0.1:…</code> ou <code>http://localhost:…</code>.
+
+4. **Coller dans le terminal SSH** où pi attend l’URL. Puis éventuellement <code>Ctrl+C</code>.
+
+</div>
+
+</v-clicks>
+
+<div v-click class="mt-6 p-3 rounded-lg bg-blue-50 border border-blue-200 text-base leading-snug text-blue-900">
+  Pas de clé API sur le VPS : OAuth + votre abonnement fournisseur.
+</div>
+
+---
+layout: default
+---
+
+# Étape 6 — Copilot · modèle · ensuite
+
+<div class="text-lg leading-relaxed">
+
+<v-clicks>
+
+**GitHub Copilot** (<code>github.com</code>)
+
+- **a)** <em>GitHub Enterprise URL</em> : **vide** + **Entrée** pour le compte public standard.
+- **b)** Copier **toute** l’URL OAuth du terminal (comme pour les autres logins).
+- **c)** Après GitHub, reprendre l’URL **localhost / 127.0.0.1** du navigateur et la coller dans pi.
+
+**Modèle & test**
+
+- <code>Ctrl+L</code> : liste / choix du modèle (voir raccourcis en bas de pi).
+- Une **question courte** pour valider que ça répond.
+
+</v-clicks>
+
+</div>
+
+<div v-click class="mt-6 p-3 rounded-lg bg-amber-50 border border-amber-200 text-base leading-snug text-amber-900">
+  → <strong>Étape&nbsp;7 — Script&nbsp;3</strong> : Slack, <code>.keys</code>, systemd… Vérifie <code>~/.pi/agent/auth.json</code> après <code>/login</code>.
 </div>
 
 ---
