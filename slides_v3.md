@@ -783,23 +783,49 @@ layout: default
 pi
 ```
 
-Puis dans l'interface pi :
+Puis dans l’interface pi :
 
 ```
 /login
 ```
 
+Choisir votre fournisseur *(ChatGPT / Gemini / GitHub Copilot / …)*. **Tous les OAuth** suivent la même logique : **URL du terminal → navigateur → URL localhost dans la barre d’adresse → vous la collez dans la fenêtre SSH où tourne pi**.
+
 <v-clicks>
 
-1. Une **URL** s'affiche dans le terminal
-2. **Copiez-la** et collez-la dans le navigateur de votre ordinateur
-3. Connectez-vous avec votre abonnement *(GPT Plus / Gemini / Copilot)*
-4. Autoriser l'accès → confirmation → revenez au terminal → `Ctrl+C` pour quitter
+1. **Une URL longue** apparaît dans le terminal → **copiez-la entièrement** (aucun provider ne doit avoir une URL coupée à la souris ou au terminal).
+2. Ouvrez-la dans le navigateur de **votre ordinateur** et connectez-vous ; **autorisez** l’accès côté fournisseur.
+3. Le navigateur affiche alors une redirection du type <code>http://127.0.0.1:</code>… ou <code>http://localhost:</code>… → **copiez cette URL complète** depuis la barre d’adresse *(c’est celle qu’il faut recoller dans le terminal)*.
+4. Dans la **session SSH** où <code>pi</code> est lancé, **collez** cette URL lorsque pi la demande.
+5. Une fois terminé : <code>Ctrl+C</code> pour quitter pi si vous en avez terminé avec le test.
 
 </v-clicks>
 
+### GitHub Copilot — précisions
+
+<v-clicks>
+
+- **a)** Invite <em>« GitHub Enterprise URL/domain »</em> pour **github.com** : laissez le champ **vide** puis **Entrée** *(Copilot Individual / compte standard)*.
+- **b)** Copiez **intégralement** l’URL OAuth sortie dans le terminal — même principe **pour tous les logins**.
+- **c)** Après validation sur GitHub, reprenez la **locale** <code>http://127.0.0.1:…</code> / <code>localhost…</code> du navigateur et collez-la dans pi comme aux étapes ci-dessus.
+
+</v-clicks>
+
+### Modèle et test rapide
+
+<v-clicks>
+
+- <code>Ctrl+L</code> : **liste / choix du modèle** *(le bandeau d’aide de pi liste les raccourcis disponibles selon votre build)*.
+- Posez une **question de test** pour vérifier que le fournisseur répond.
+
+</v-clicks>
+
+<div v-click class="mt-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-sm text-amber-900">
+  <strong>Ensuite — Étape&nbsp;7 Script&nbsp;3</strong> : tokens Slack, fichier <code>.keys</code>, service systemd pour pi-mom, etc. Le script&nbsp;3 vérifie la présence de <code>~/.pi/agent/auth.json</code> après ce <code>/login</code>.
+</div>
+
 <div v-click class="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-sm text-blue-700">
-  Abonnement utilisé via OAuth — pas de clé API, pas de facturation supplémentaire.
+  OAuth : pas de clé API dans le VPS — vous utilisez l’abonnement du fournisseur.
 </div>
 
 ---
@@ -814,14 +840,14 @@ curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom
 
 <div class="mt-4 space-y-2 text-sm">
 
-Le script pose 4 questions :
+Après avoir réussi **pi** + **/login**, le script&nbsp;3 pose **plusieurs questions** :
 
 <v-clicks>
 
-- `MOM_SLACK_APP_TOKEN` *(masqué — validation xapp-)*
-- `MOM_SLACK_BOT_TOKEN` *(masqué — validation xoxb-)*
-- Prénom ou surnom de l'agent
-- URL du repo GitHub privé
+- Tokens Slack APP et Bot *(formats <code>xapp-</code> / <code>xoxb-</code>)*
+- Fournisseur et modèle LLM *(repris depuis votre <code>/login</code>, modifiables à la frappe)*
+- Prénom / surnom de l’agent
+- URL du repo GitHub privé *(facultatif)*
 
 </v-clicks>
 
