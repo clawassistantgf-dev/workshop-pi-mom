@@ -8,6 +8,7 @@
 #
 
 set -e
+set -o pipefail
 
 # Vérifie si le script est exécuté en tant que root
 if [ "$EUID" -ne 0 ]; then
@@ -203,9 +204,9 @@ echo
 echo "  📌 ÉTAPE SUIVANTE"
 echo
 echo "  1. Ouvrez un NOUVEAU terminal sur votre ordi"
-echo "  2. Connectez-vous avec votre nouvelle identité :"
+echo "  2. Connectez-vous avec votre nouvelle identité et votre clé privée (-i même chemin que ssh-keygen -f) :"
 echo
-echo "       ssh $username@$SERVER_IP"
+echo "       ssh -i ~/.ssh/$username $username@$SERVER_IP"
 echo
 echo "  3. Une fois connecté, lancez le script 2."
 echo

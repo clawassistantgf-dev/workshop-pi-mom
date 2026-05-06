@@ -6,19 +6,22 @@ info: |
   Workshop pi-mom sur VPS Hostinger
   Votre agent IA personnel, sur votre serveur.
 layout: intro
+class: pb-14
 ---
 
 # Les Fadas de l'IA 🫒
 
 Votre agent IA personnel, sur votre serveur, opérationnel en moins de 2h.
 
-<div class="pt-4 flex gap-2 flex-wrap">
+<div class="pt-2 flex gap-2 flex-wrap">
   <span class="px-3 py-1 rounded-full text-xs bg-purple-100 text-purple-700">Hostinger KVM2</span>
   <span class="px-3 py-1 rounded-full text-xs bg-teal-100 text-teal-700">Ubuntu 24.04 LTS</span>
   <span class="px-3 py-1 rounded-full text-xs bg-amber-100 text-amber-700">pi-mom</span>
   <span class="px-3 py-1 rounded-full text-xs bg-blue-100 text-blue-700">Slack</span>
   <span class="px-3 py-1 rounded-full text-xs bg-orange-100 text-orange-700">Cloudflare</span>
 </div>
+
+<IntroLanAccess />
 
 ---
 layout: section
@@ -43,8 +46,16 @@ layout: default
 </v-clicks>
 
 <div v-click class="mt-6 p-4 rounded-lg bg-amber-50 border border-amber-200 text-sm text-amber-800">
-  💡 Pas d'abonnement LLM ? GitHub Copilot Individual fait l'affaire — 3 minutes pour s'inscrire, on prend le temps.
+  💡 Pas d'abonnement LLM ? GitHub Copilot Individual fait l'affaire — 3 minutes pour s'inscrire
 </div>
+
+---
+layout: default
+---
+
+<h1 class="mb-4 text-3xl font-bold tracking-tight">Suivi live — même réseau Wi‑Fi que la salle</h1>
+
+<FollowAudienceQr />
 
 ---
 layout: section
@@ -63,6 +74,7 @@ layout: default
 
 <div class="text-sm opacity-60">Peter Steinberger, développeur autrichien. Après 3 ans de voyage, il revient au code avec une idée simple :</div>
 
+<v-click>
 <div class="flex flex-col gap-2 text-sm">
   <div class="flex items-center gap-3 opacity-50">
     <span class="px-2 py-1 rounded border border-current text-xs">Avant</span>
@@ -74,7 +86,9 @@ layout: default
     <span>Vous demandez → l'IA <strong>fait</strong>.</span>
   </div>
 </div>
+</v-click>
 
+<v-click>
 <div class="flex items-center gap-0 mt-2">
   <div class="flex flex-col items-center gap-1">
     <div class="text-2xl">📱</div>
@@ -95,31 +109,42 @@ layout: default
     <div class="text-xs opacity-40">Serveur</div>
   </div>
 </div>
+</v-click>
 
+<v-click>
 <div class="text-sm opacity-60">
   1 heure de code. L'IA exécute des commandes, crée des fichiers, cherche sur le web.<br>
   <strong class="opacity-100">Elle agit.</strong>
 </div>
+</v-click>
 
 </div>
 <div class="space-y-3 text-sm">
 
+<v-click>
 <div class="p-3 rounded-lg border border-gray-200 space-y-1">
   <div>💬 <span class="opacity-50">Vous :</span> "Résume le PDF dans mon dossier Downloads"</div>
   <div>🤖 <span class="opacity-50">Agent :</span> lit le fichier, écrit le résumé, vous l'envoie</div>
 </div>
+</v-click>
 
+<v-click>
 <div class="p-3 rounded-lg border border-gray-200 space-y-1">
   <div>💬 <span class="opacity-50">Vous :</span> "Crée-moi un site et mets-le en ligne"</div>
   <div>🤖 <span class="opacity-50">Agent :</span> code, déploie, envoie le lien</div>
 </div>
+</v-click>
 
+<v-click>
 <div class="p-3 rounded-lg border border-gray-200 space-y-1">
   <div>💬 <span class="opacity-50">Vous :</span> "Rappelle-moi le dentiste demain à 9h"</div>
   <div>🤖 <span class="opacity-50">Agent :</span> programme le rappel, l'envoie lui-même</div>
 </div>
+</v-click>
 
+<v-click>
 <div class="text-xs opacity-30 pt-1">Les grandes boîtes n'avaient pas fait ça. Ni OpenAI. Ni Google. Ni Anthropic.</div>
+</v-click>
 
 </div>
 </div>
@@ -129,10 +154,10 @@ layout: fact
 ---
 
 # 285 000 ⭐
-Record absolu de l'histoire de GitHub
+Parmi les repos les plus ★ de l'histoire de GitHub
 
-<div class="text-lg text-gray-500 mt-2">au 4 mars 2026 — moins de 4 mois après le premier commit</div>
-<div class="text-sm text-gray-400 mt-1">(~320 000 ⭐ aujourd'hui, et ça continue)</div>
+<div class="text-lg text-gray-500 mt-2">pics médiatisés ~4–5 mars 2026 (~250k★ dépassent React ~3 mars ; ~285k★ peu après) — le repo existe depuis ~nov. 2025</div>
+<div class="text-sm text-gray-400 mt-1">(~369k★ au 5 mai 2026 sur github.com/openclaw/openclaw — et ça continue)</div>
 
 ---
 layout: quote
@@ -140,63 +165,91 @@ layout: quote
 
 *"OpenClaw est probablement la release logicielle la plus importante, you know, **probably ever**. Linux a mis 30 ans. OpenClaw : 3 semaines."*
 
-<div class="mt-4 text-sm text-gray-400">Jensen Huang, CEO NVIDIA — GTC keynote, mars 2026</div>
+<div class="mt-4 text-sm text-gray-400">Jensen Huang, CEO NVIDIA — reprise très médiatisée (ex.&nbsp;<a href="https://www.cnbc.com/video/2026/03/05/nvidia-ceo-jensen-huang-calls-openclaw-the-most-important-software-release-probably-ever.html" target="_blank" rel="noopener">CNBC, 5 mars</a>) + keynote&nbsp;GTC San Jose (~17 mars 2026,&nbsp;<a href="https://today.reuters.com/technology/artificial-intelligence/artificial-intelligencer-jensen-huang-wants-every-company-have-an-openclaw-plan-2026-03-18/" target="_blank" rel="noopener">Reuters</a>)</div>
 
 ---
 layout: default
 ---
 
-# La timeline
+<div class="-mt-4 text-sm leading-snug">
 
-<div class="space-y-3 mt-4">
+<h1 class="mb-2 text-4xl font-bold tracking-tight">La timeline</h1>
+
+<div class="space-y-1 mt-1">
 
 <v-click>
-<div class="flex gap-4 items-center p-3 rounded-lg border-l-4 border-purple-400 border border-gray-200">
+<div class="flex gap-2 items-start py-1.5 px-2 rounded-lg border-l-4 border-purple-400 border border-gray-200">
   <div class="text-xs w-24 shrink-0 font-medium text-purple-400">Nov 2025</div>
   <div class="w-2 h-2 rounded-full bg-purple-400 shrink-0"></div>
-  <div class="text-sm"><strong>Clawdbot 🦞</strong> — 1 heure, 1 développeur autrichien, 1 idée folle</div>
+  <div class="text-xs leading-snug"><strong>Clawdbot 🦞</strong> — 1 heure, 1 développeur autrichien, 1 idée folle</div>
 </div>
 </v-click>
 
 <v-click>
-<div class="flex gap-4 items-center p-3 rounded-lg border-l-4 border-gray-400 border border-gray-200">
+<div class="flex gap-2 items-start py-1.5 px-2 rounded-lg border-l-4 border-gray-400 border border-gray-200">
   <div class="text-xs w-24 shrink-0 font-medium opacity-50">Jan 27, 2026</div>
   <div class="w-2 h-2 rounded-full bg-gray-400 shrink-0"></div>
-  <div class="text-sm">Le projet est renommé <strong>OpenClaw</strong> 🦞</div>
+  <div class="text-xs leading-snug"><strong>Clawdbot</strong> devient <strong>Moltbot</strong> 🦞 — 1er renommage (pression trademark <strong>Anthropic</strong> sur la proximité avec «&nbsp;Claude&nbsp;»)</div>
 </div>
 </v-click>
 
 <v-click>
-<div class="flex gap-4 items-center p-3 rounded-lg border-l-4 border-blue-400 border border-gray-200">
-  <div class="text-xs w-24 shrink-0 font-medium text-blue-400">Jan 30, 2026</div>
+<div class="flex gap-2 items-start py-1.5 px-2 rounded-lg border-l-4 border-blue-400 border border-gray-200">
+  <div class="text-xs w-24 shrink-0 font-medium text-blue-400">Jan 28, 2026</div>
   <div class="w-2 h-2 rounded-full bg-blue-400 shrink-0"></div>
-  <div class="text-sm"><strong>Moltbook</strong> — 1er réseau social pour agents IA. Viral en quelques heures. 1,7M d'agents.</div>
+  <div class="text-xs leading-snug"><strong>Moltbook</strong> — réseau social pour agents (Matt Schlicht). Viral ; ordre de grandeur <strong>~1,5M+</strong> «&nbsp;agents&nbsp;» enregistrés très vite (chiffres variables selon sources / fuites).</div>
 </div>
 </v-click>
 
 <v-click>
-<div class="flex gap-4 items-center p-3 rounded-lg border-l-4 border-gray-400 border border-gray-200">
+<div class="flex gap-2 items-start py-1.5 px-2 rounded-lg border-l-4 border-teal-400 border border-gray-200">
+  <div class="text-xs w-24 shrink-0 font-medium text-teal-600">Jan 30, 2026</div>
+  <div class="w-2 h-2 rounded-full bg-teal-400 shrink-0"></div>
+  <div class="text-xs leading-snug"><strong>Moltbot</strong> devient <strong>OpenClaw</strong> 🦞 — nom final du projet de Steinberger</div>
+</div>
+</v-click>
+
+<v-click>
+<div class="flex gap-2 items-start py-1.5 px-2 rounded-lg border-l-4 border-gray-400 border border-gray-200">
   <div class="text-xs w-24 shrink-0 font-medium opacity-50">Fév 14, 2026</div>
   <div class="w-2 h-2 rounded-full bg-gray-400 shrink-0"></div>
-  <div class="text-sm">Steinberger rejoint OpenAI. Le projet passe en <strong>fondation open-source</strong>.</div>
+  <div class="text-xs leading-snug">Steinberger rejoint OpenAI. Le projet passe en <strong>fondation open-source</strong>.</div>
 </div>
 </v-click>
 
 <v-click>
-<div class="flex gap-4 items-center p-3 rounded-lg border-l-4 border-amber-400 border border-gray-200">
-  <div class="text-xs w-24 shrink-0 font-medium text-amber-400">Mar 4, 2026</div>
+<div class="flex gap-2 items-start py-1.5 px-2 rounded-lg border-l-4 border-amber-400 border border-gray-200">
+  <div class="text-xs w-24 shrink-0 font-medium text-amber-400"> ~3–5 mars 2026</div>
   <div class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></div>
-  <div class="text-sm"><strong>Jensen Huang</strong> — <em>"probably the most important software ever"</em> — <strong>285 000 ⭐</strong></div>
+  <div class="text-xs leading-snug">OpenClaw grimpe très vite aux sommets GitHub★ (souvent cité comme dépassant <strong>React</strong> — pics ~250k★ puis ~285k★ selon le jour).</div>
 </div>
 </v-click>
 
 <v-click>
-<div class="flex gap-4 items-center p-3 rounded-lg border-l-4 border-red-400 border border-gray-200">
+<div class="flex gap-2 items-start py-1.5 px-2 rounded-lg border-l-4 border-amber-500 border border-gray-200">
+  <div class="text-xs w-24 shrink-0 font-medium text-amber-600"> ~17 mars 2026</div>
+  <div class="w-2 h-2 rounded-full bg-amber-600 shrink-0"></div>
+  <div class="text-xs leading-snug"><strong>Jensen Huang</strong> met OpenClaw au centre au <strong>GTC</strong> — <em>«every company … needs an OpenClaw strategy»</em>, comparaisons avec Linux/Windows...</div>
+</div>
+</v-click>
+
+<v-click>
+<div class="flex gap-2 items-start py-1.5 px-2 rounded-lg border-l-4 border-indigo-400 border border-gray-200">
+  <div class="text-xs w-24 shrink-0 font-medium text-indigo-500">Mar 10, 2026</div>
+  <div class="w-2 h-2 rounded-full bg-indigo-400 shrink-0"></div>
+  <div class="text-xs leading-snug"><strong>Meta</strong> rachète <strong>Moltbook</strong> — la plateforme rejoint <strong>Meta Superintelligence Labs</strong> (MSL). Matt Schlicht &amp; Ben Parr rejoignent Meta. <span class="text-gray-400">Annonce presse (Axios, TechCrunch&nbsp;…) — montant non divulgué.</span></div>
+</div>
+</v-click>
+
+<v-click>
+<div class="flex gap-2 items-start py-1.5 px-2 rounded-lg border-l-4 border-red-400 border border-gray-200">
   <div class="text-xs w-24 shrink-0 font-medium text-red-400">Mar 16, 2026</div>
   <div class="w-2 h-2 rounded-full bg-red-400 shrink-0"></div>
-  <div class="text-sm">NVIDIA annonce <strong>NemoClaw</strong> à la GTC. Pi de Mario Zechner devient le moteur agent au cœur d'OpenClaw.</div>
+  <div class="text-xs leading-snug">NVIDIA annonce <strong>NemoClaw</strong> pour la communauté OpenClaw (<a class="underline" href="https://techcrunch.com/2026/03/16/nvidias-version-of-openclaw-could-solve-its-biggest-problem-security" target="_blank" rel="noopener">couverture presse ~16 mars</a>). Écosystème&nbsp;: l’agent minimal <strong>Pi</strong> (<strong>Mario Zechner</strong>) est souvent décrit comme le moteur type des déploiements OpenClaw ; Nvidia et la presse associent aussi <strong>Huang × Steinberger</strong> pour la couche sécurité / enterprise.</div>
 </div>
 </v-click>
+
+</div>
 
 </div>
 
@@ -274,11 +327,43 @@ layout: default
 
 <v-clicks>
 
-1. Hostinger → VPS → **KVM2** — ~10€/mois
+1. Hostinger → VPS → **KVM2** — ~10€/mois *(ou lien + QR ci-dessous)*
 2. OS : **Ubuntu 24.04 LTS** — Région : Europe
 3. Valider → le VPS se provisionne (5-15 min selon la charge)
 
 </v-clicks>
+
+<div v-click class="mt-5 grid md:grid-cols-2 gap-6 md:gap-10 items-start pb-8">
+<div class="space-y-3">
+  <div class="text-sm font-semibold text-gray-800">Panier direct — KVM2 · 1 mois</div>
+  <a
+    href="https://www.hostinger.com/fr/cart?product=vps%3Avps_kvm_2&period=1&referral_type=cart_link&REFERRALCODE=V1OGALOISR48&referral_id=019df8d4-eca0-7030-be02-33c5e732a5db"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-violet-600 text-white font-medium text-base shadow-md hover:bg-violet-700 transition-colors"
+  >
+    Ouvrir Hostinger KVM2
+  </a>
+  <p class="text-xs text-gray-500 leading-relaxed">
+    Lien affiliation (même prix affiché chez Hostinger). URL complète affichée sur le QR — suffisamment grand pour scanner depuis le fond de la salle.
+  </p>
+</div>
+<div class="flex flex-col items-center md:items-end w-full shrink-0">
+  <div class="rounded-[1.85rem] bg-white px-6 py-6 pb-8 shadow-xl border border-gray-100 mb-3 max-w-[min(94vw,20rem)] box-border overflow-visible">
+    <img
+      src="https://api.qrserver.com/v1/create-qr-code/?size=460x460&amp;ecc=H&amp;margin=32&amp;color=1f2937&amp;bgcolor=ffffff&amp;format=png&amp;data=https%3A%2F%2Fwww.hostinger.com%2Ffr%2Fcart%3Fproduct%3Dvps%253Avps_kvm_2%26period%3D1%26referral_type%3Dcart_link%26REFERRALCODE%3DV1OGALOISR48%26referral_id%3D019df8d4-eca0-7030-be02-33c5e732a5db"
+      alt="QR code panier VPS KVM2 Hostinger"
+      width="280"
+      height="280"
+      class="block w-[min(78vw,280px)] max-w-[280px] h-auto mx-auto rounded-lg object-contain"
+      loading="lazy"
+    >
+    <p class="mt-5 mx-2 text-xs text-gray-400 text-center leading-relaxed px-2">
+      Laissez le cadre blanc autour visible — sans ça les téléphones lisent mal. Scannez avec l’appareil photo ou Google Lens.
+    </p>
+  </div>
+</div>
+</div>
 
 <div v-click class="mt-6 font-mono text-sm bg-gray-50 border border-gray-200 rounded-lg p-4 text-gray-600">
 VPS KVM2 · 2 vCPU · 8 GB RAM · 100 GB NVMe · Ubuntu 24.04 LTS
@@ -421,8 +506,12 @@ layout: default
 **Première connexion au serveur** *(IP et mot de passe = email Hostinger)*
 
 ```bash
-ssh root@VOTRE_IP_HOSTINGER
+ssh -i ~/.ssh/lej root@VOTRE_IP_HOSTINGER
 ```
+
+<div class="text-xs text-gray-500 mt-2 -mb-1">
+  <code>-i</code> = chemin de votre <strong>clé privée</strong> (le même nom que pour <code>ssh-keygen -f ~/.ssh/lej</code> — remplacez <code>lej</code> par celui de votre agent). Pas encore de clé sur la machine ? <code>ssh root@VOTRE_IP_HOSTINGER</code> avec le mot de passe root, puis générez la clé (slide suivante) avant de coller la pub dans le script.
+</div>
 
 <v-clicks>
 
@@ -451,7 +540,7 @@ Résultat : root désactivé · UFW actif · règle sudo prête pour le Script 2
 </div>
 
 <div v-click class="mt-2 text-xs text-gray-500 italic">
-  💡 Forme <strong>portable</strong> (évite l'erreur <code>/dev/fd/63</code> sur certains hébergeurs)&nbsp;: <code>curl -fsSL URL -o /tmp/script.sh &amp;&amp; bash /tmp/script.sh</code>. Alternative Bash uniquement&nbsp;: <code>bash &lt;(curl -fsSL URL)</code>.
+  💡 Même méthode que le script&nbsp;2 : fichier dans <code>/tmp</code> puis <code>bash</code> (évite <code>/dev/fd/…</code> sur certains hébergeurs).
 </div>
 
 ---
@@ -524,7 +613,7 @@ curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom
 ```
 
 <div class="mt-4 text-sm text-gray-500">
-  ⏳ ~5-12 minutes (install npm ciblée + build sans web-ui ; <code>pi-tui</code> est requis pour compiler <code>coding-agent</code>). Le script est <strong>idempotent</strong> — relançable sans danger.
+  ⏳ ~8-16 minutes (npm workspaces + compilation <code>pi-tui</code> puis <code>coding-agent</code>). Le script est <strong>idempotent</strong> — relançable sans danger (<code>HUSKY=0</code> évite les erreurs « husky not found » sur le VPS).
 </div>
 
 <div class="mt-6 grid grid-cols-2 gap-3 text-sm">
@@ -563,7 +652,7 @@ layout: default
 # Pendant que ça installe...
 
 <div class="text-sm text-gray-500 mb-4">
-  Le script tourne souvent ~5–12 min. Bon moment pour expliquer ce qu'il fait — et la suite contient une bonne nouvelle.
+  Le script tourne ~10 min. Bon moment pour expliquer ce qu'il fait — et la suite contient une bonne nouvelle.
 </div>
 
 <div class="space-y-3">

@@ -8,6 +8,7 @@
 #
 
 set -e
+set -o pipefail
 
 # ─────────────────────────────────────────────────────────
 # 0. Vérifications préalables
@@ -264,7 +265,7 @@ SANDBOX_NAME="mom-sandbox"
 if ! docker ps -a --format '{{.Names}}' | grep -q "^${SANDBOX_NAME}$"; then
   echo "⏳ Création du container Docker sandbox..."
   if [ -f "$DOCKER_SCRIPT" ]; then
-    bash "$DOCKER_SCRIPT" create "$WORKSPACE" 2>&1 | tail -3
+    bash "$DOCKER_SCRIPT" create "$WORKSPACE"
   else
     # Fallback si docker.sh introuvable
     docker run -d --name "$SANDBOX_NAME" \
