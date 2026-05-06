@@ -252,7 +252,7 @@ MON ÉTAT ACTUEL (à remplir par moi après ton premier message)
       }
 
       function openChatGpt() {
-        window.open("https://chatgpt.com/", "_blank", "noopener,noreferrer");
+        return window.open("https://chatgpt.com/", "_blank", "noopener,noreferrer");
       }
       function fallbackCopy(txt) {
         var ta = document.createElement("textarea");
@@ -303,6 +303,7 @@ MON ÉTAT ACTUEL (à remplir par moi après ton premier message)
 
       btnCopyOpen.addEventListener("click", async function () {
         btnCopyOpen.disabled = true;
+        var popup = openChatGpt();
         try {
           var ok = false;
           try {
@@ -310,11 +311,12 @@ MON ÉTAT ACTUEL (à remplir par moi après ton premier message)
           } catch (_e1) {
             ok = fallbackCopy(text);
           }
-          if (ok) {
-            showToast("Copié — onglet ChatGPT ouvert. Nouvelle discussion : Ctrl+Shift+O.");
-            openChatGpt();
+          if (ok && popup) {
+            showToast("Copié — nouvel onglet ChatGPT. Nouvelle discussion : Ctrl+Shift+O ou la barre latérale.");
+          } else if (ok && !popup) {
+            showToast("Copié — le navigateur a bloqué ChatGPT ; cliquez « Ouvrir ChatGPT seul » ou autorisez les pop-ups.");
           } else {
-            showToast("Copie refusée : ouvrez la page via https / localhost puis réessayez.");
+            showToast("Copie impossible ici — ouvrez en https / localhost, ou copiez depuis l’encadré.");
           }
         } finally {
           btnCopyOpen.disabled = false;
