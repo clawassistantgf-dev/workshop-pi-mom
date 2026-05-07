@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Débogage script 2 · workshop pi-mom · Windows — ouvrir ChatGPT, Claude ou Gemini avec le prompt prêt à coller." />
+  <meta name="description" content="Débogage script 2 · workshop pi-mom · Windows — ChatGPT (?q=) ou copier puis Claude / Gemini." />
   <title>Workshop pi-mom — aide</title>
   <style>
     :root {
@@ -217,16 +217,16 @@
       <p class="eyebrow">Windows · débogage</p>
       <h1 id="titre-debug">Bloqué au script 2&nbsp;?</h1>
       <p class="lead">
-        Installe la stack agent sur le VPS depuis ton PC. Choisis un assistant : le <strong>prompt complet</strong> est <strong>copié dans le presse-papiers</strong>, la fenêtre s’ouvre — il reste à coller avec <kbd>Ctrl</kbd> + <kbd>V</kbd> (ou clic droit → coller).
+        <strong>ChatGPT</strong> peut ouvrir un chat avec le texte déjà dans le champ (<code>?q=</code> dans l’URL, si la taille le permet). <strong>Claude</strong> et <strong>Gemini</strong> : le prompt est copié puis tu ouvres l’assistant — colle avec <kbd>Ctrl</kbd> + <kbd>V</kbd>.
       </p>
       <p class="explain-tiny">
-        ChatGPT / Claude / Gemini n’acceptent pas un texte long dans l’URL : c’est normal. Ce flux <strong>copie puis ouvre</strong> pour éviter les erreurs.
+        Le paramètre <code>q</code> n’est <strong>pas</strong> documenté comme stable par OpenAI ; si le prompt devient trop long pour l’URL, on repasse automatiquement en <strong>copie + collage</strong>. Pour Claude / Gemini il n’y a pas d’équivalent fiable en une URL.
       </p>
 
       <div id="banner" role="status" aria-live="polite"></div>
 
-      <div class="ai-grid" role="group" aria-label="Ouvrir un assistant avec le prompt copié">
-        <button type="button" class="btn-gpt" data-open="https://chatgpt.com/" data-name="ChatGPT" title="Copier le prompt et ouvrir ChatGPT">
+      <div class="ai-grid" role="group" aria-label="Ouvrir un assistant">
+        <button type="button" class="btn-gpt" id="btn-chatgpt" title="Ouvre ChatGPT avec le prompt (q=) ou copie + site">
           ChatGPT
         </button>
         <button type="button" class="btn-claude" data-open="https://claude.ai/new" data-name="Claude" title="Copier le prompt et ouvrir Claude">
@@ -266,10 +266,13 @@
       const RAW_FALLBACK =
         "https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/docs/prompt-deblocage-script2-windows-FR.txt";
       const LOCAL_TXT = "./prompt-deblocage-script2-windows-FR.txt";
+      /** Max length of full ChatGPT URL with ?q= (browser / service limits vary). */
+      const CHATGPT_Q_MAX_URL = 7800;
 
       const preview = document.getElementById("prompt-preview");
       const banner = document.getElementById("banner");
       const btnCopyOnly = document.getElementById("btn-copy-only");
+      const btnChatgpt = document.getElementById("btn-chatgpt");
       let promptText = "";
 
       function showBanner(ok, message) {
@@ -333,6 +336,12 @@
         showBanner(false, "Fichier prompt introuvable — utilise le lien GitHub ci-dessous.");
       }
 
+      function buildChatGptPrefillUrl(text) {
+        if (!text) return null;
+        var u = "https://chatgpt.com/?q=" + encodeURIComponent(text);
+        return u.length > CHATGPT_Q_MAX_URL ? null : u;
+      }
+
       async function flowOpen(url, name) {
         var btns = document.querySelectorAll(".ai-grid button");
         btns.forEach(function (b) {
@@ -362,7 +371,57 @@
         }
       }
 
-      document.querySelectorAll(".ai-grid button").forEach(function (btn) {
+      async function flowChatGpt() {
+        if (!promptText) {
+          showBanner(false, "Le prompt n’est pas encore chargé. Patientez quelques secondes ou ouvrez « Afficher le texte du prompt ».");
+          return;
+        }
+        var btns = document.querySelectorAll(".ai-grid button");
+        btns.forEach(function (b) {
+          b.disabled = true;
+        });
+        try {
+          var prefill = buildChatGptPrefillUrl(promptText);
+          var copied = await copyPrompt();
+          if (prefill) {
+            if (copied) {
+              showBanner(
+                true,
+                "ChatGPT s’ouvre avec le texte prérempli (paramètre q). Copie aussi faite en secours (Ctrl+V)."
+              );
+            } else {
+              showBanner(
+                true,
+                "ChatGPT s’ouvre avec le texte prérempli. Si le champ est vide, colle depuis « Afficher le texte du prompt »."
+              );
+            }
+            hideBannerSoon(10000);
+            window.open(prefill, "_blank", "noopener,noreferrer");
+          } else {
+            if (copied) {
+              showBanner(
+                true,
+                "Prompt trop long pour l’URL — copié. Ouvre ChatGPT et colle avec Ctrl+V."
+              );
+              hideBannerSoon(9000);
+              window.open("https://chatgpt.com/", "_blank", "noopener,noreferrer");
+            } else {
+              showBanner(
+                false,
+                "Prompt trop long pour l’URL et copie impossible (essaie en HTTPS). Ouvre ChatGPT et copie depuis « Afficher le texte du prompt »."
+              );
+            }
+          }
+        } finally {
+          btns.forEach(function (b) {
+            b.disabled = false;
+          });
+        }
+      }
+
+      btnChatgpt.addEventListener("click", flowChatGpt);
+
+      document.querySelectorAll('.ai-grid button[data-open]').forEach(function (btn) {
         btn.addEventListener("click", function () {
           flowOpen(btn.getAttribute("data-open"), btn.getAttribute("data-name"));
         });
