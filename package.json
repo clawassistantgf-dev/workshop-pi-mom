@@ -1,0 +1,14 @@
+{
+  "name": "workshop-pi-mom",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "slidev slides/slides.md",
+    "build": "slidev build slides/slides.md --out dist/slides",
+    "export": "slidev export slides/slides.md"
+  },
+  "devDependencies": {
+    "@slidev/cli": "^51.4.0",
+    "@slidev/theme-apple-basic": "^0.25.0"
+  }
+}
