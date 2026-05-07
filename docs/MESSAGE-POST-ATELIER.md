@@ -16,7 +16,7 @@ Message court pour tout le monde : **tu n’as qu’une chose à retenir par sit
 
 3. Si la page ne charge pas le texte : récupère le prompt dans le fichier  
    [`prompt-deblocage-script2-windows-FR.txt`](https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/prompt-deblocage-script2-windows-FR.txt)  
-   sur GitHub et collé-le à la main dans ton assistant.
+   sur GitHub et colle-le à la main dans ton assistant.
 
 **En résumé :** une page + un prompt guidé → tu ne restes pas seul face à l’erreur.
 
