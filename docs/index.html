@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Débogage script 2 · workshop pi-mom · Windows — ChatGPT (?q=) ou copier puis Claude / Gemini." />
+  <meta name="description" content="Débogage script 2 · workshop pi-mom · Windows — ouvrir ChatGPT / Claude / Gemini et coller le prompt." />
   <title>Workshop pi-mom — aide</title>
   <style>
     :root {
@@ -217,22 +217,22 @@
       <p class="eyebrow">Windows · débogage</p>
       <h1 id="titre-debug">Bloqué au script 2&nbsp;?</h1>
       <p class="lead">
-        <strong>ChatGPT</strong> peut ouvrir un chat avec le texte déjà dans le champ (<code>?q=</code> dans l’URL, si la taille le permet). <strong>Claude</strong> et <strong>Gemini</strong> : le prompt est copié puis tu ouvres l’assistant — colle avec <kbd>Ctrl</kbd> + <kbd>V</kbd>.
+        Chaque bouton <strong>ouvre un nouvel onglet</strong> vers l’assistant (autorise les <strong>fenêtres pop-up</strong> pour cette page si rien ne s’ouvre). Ensuite : <strong>ChatGPT</strong> met souvent le texte déjà dans la zone de message ; pour <strong>Claude</strong> et <strong>Gemini</strong>, le prompt est dans le presse-papiers — colle avec <kbd>Ctrl</kbd> + <kbd>V</kbd>.
       </p>
       <p class="explain-tiny">
-        Le paramètre <code>q</code> n’est <strong>pas</strong> documenté comme stable par OpenAI ; si le prompt devient trop long pour l’URL, on repasse automatiquement en <strong>copie + collage</strong>. Pour Claude / Gemini il n’y a pas d’équivalent fiable en une URL.
+        Si le prompt est très long, ChatGPT peut seulement ouvrir le site : le texte reste copié pour un collage manuel. OpenAI peut changer ce comportement à tout moment. Les autres assistants n’acceptent pas le même raccourci, d’où la copie systématique.
       </p>
 
       <div id="banner" role="status" aria-live="polite"></div>
 
       <div class="ai-grid" role="group" aria-label="Ouvrir un assistant">
-        <button type="button" class="btn-gpt" id="btn-chatgpt" title="Ouvre ChatGPT avec le prompt (q=) ou copie + site">
+        <button type="button" class="btn-gpt" id="btn-chatgpt" title="Ouvre ChatGPT dans un nouvel onglet">
           ChatGPT
         </button>
-        <button type="button" class="btn-claude" data-open="https://claude.ai/new" data-name="Claude" title="Copier le prompt et ouvrir Claude">
+        <button type="button" class="btn-claude" data-open="https://claude.ai/new" data-name="Claude" title="Ouvre Claude dans un nouvel onglet et copie le prompt">
           Claude
         </button>
-        <button type="button" class="btn-gemini" data-open="https://gemini.google.com/app" data-name="Gemini" title="Copier le prompt et ouvrir Gemini">
+        <button type="button" class="btn-gemini" data-open="https://gemini.google.com/app" data-name="Gemini" title="Ouvre Gemini dans un nouvel onglet et copie le prompt">
           Gemini
         </button>
       </div>
@@ -342,27 +342,51 @@
         return u.length > CHATGPT_Q_MAX_URL ? null : u;
       }
 
+      /** Open in new tab; avoid noopener in windowFeatures so we can detect blockers (null). Clear opener after. */
+      function openNewTab(url) {
+        var w = window.open(url, "_blank");
+        if (w) {
+          try {
+            w.opener = null;
+          } catch (_e) {}
+        }
+        return w;
+      }
+
       async function flowOpen(url, name) {
         var btns = document.querySelectorAll(".ai-grid button");
         btns.forEach(function (b) {
           b.disabled = true;
         });
         try {
+          var win = openNewTab(url);
+          if (!win) {
+            var fallbackCopyOk = await copyPrompt();
+            showBanner(
+              false,
+              fallbackCopyOk
+                ? "Nouvel onglet bloqué par le navigateur — le prompt est copié. Autorise les pop-up pour ce site, ou ouvre " +
+                    name +
+                    " à la main et colle avec Ctrl+V."
+                : "Nouvel onglet bloqué. Autorise les pop-up pour ce site (icône dans la barre d’adresse), puis réessaie. Ou copie le texte depuis « Afficher le texte du prompt »."
+            );
+            return;
+          }
           var ok = await copyPrompt();
           if (ok) {
             showBanner(
               true,
-              "Copié. Dans " +
+              "Onglet " +
                 name +
-                ", ouvrez une nouvelle conversation si besoin, puis collez avec Ctrl+V (ou clic droit → Coller)."
+                " ouvert. Le prompt est copié : colle avec Ctrl+V (ou clic droit → Coller) dans le champ de message."
             );
             hideBannerSoon(9000);
-            window.open(url, "_blank", "noopener,noreferrer");
           } else {
             showBanner(
               false,
-              "Copie impossible (essaie en HTTPS, pas en file://). Sélectionne le texte dans « Afficher le texte du prompt »."
+              "Onglet ouvert, mais la copie a échoué (file:// ou permissions). Ouvre « Afficher le texte du prompt » et copie à la main."
             );
+            hideBannerSoon(12000);
           }
         } finally {
           btns.forEach(function (b) {
@@ -382,36 +406,45 @@
         });
         try {
           var prefill = buildChatGptPrefillUrl(promptText);
+          var targetUrl = prefill || "https://chatgpt.com/";
+          var win = openNewTab(targetUrl);
+          if (!win) {
+            var fb = await copyPrompt();
+            showBanner(
+              false,
+              fb
+                ? "Nouvel onglet bloqué — le prompt est copié. Autorise les pop-up pour cette page, ou ouvre chatgpt.com à la main et colle."
+                : "Nouvel onglet bloqué. Autorise les pop-up pour cette page, puis reclique. Ou copie depuis « Afficher le texte du prompt »."
+            );
+            return;
+          }
           var copied = await copyPrompt();
           if (prefill) {
             if (copied) {
               showBanner(
                 true,
-                "ChatGPT s’ouvre avec le texte prérempli (paramètre q). Copie aussi faite en secours (Ctrl+V)."
+                "Onglet ChatGPT ouvert : le message est souvent déjà rempli. Sinon colle avec Ctrl+V (copie de secours faite)."
               );
             } else {
               showBanner(
                 true,
-                "ChatGPT s’ouvre avec le texte prérempli. Si le champ est vide, colle depuis « Afficher le texte du prompt »."
+                "Onglet ChatGPT ouvert. Si le texte ne s’affiche pas, copie depuis « Afficher le texte du prompt »."
               );
             }
-            hideBannerSoon(10000);
-            window.open(prefill, "_blank", "noopener,noreferrer");
           } else {
             if (copied) {
               showBanner(
                 true,
-                "Prompt trop long pour l’URL — copié. Ouvre ChatGPT et colle avec Ctrl+V."
+                "Prompt trop long pour un lien direct : onglet ChatGPT ouvert, texte copié — colle avec Ctrl+V."
               );
-              hideBannerSoon(9000);
-              window.open("https://chatgpt.com/", "_blank", "noopener,noreferrer");
             } else {
               showBanner(
                 false,
-                "Prompt trop long pour l’URL et copie impossible (essaie en HTTPS). Ouvre ChatGPT et copie depuis « Afficher le texte du prompt »."
+                "Onglet ouvert ; copie impossible. Utilise « Afficher le texte du prompt » pour copier à la main."
               );
             }
           }
+          hideBannerSoon(10000);
         } finally {
           btns.forEach(function (b) {
             b.disabled = false;
