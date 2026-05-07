@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "slidev slides/slides.md",
     "build": "slidev build slides/slides.md --out dist/slides",
-    "export": "slidev export slides/slides.md"
+    "export": "slidev export slides/slides.md",
+    "export:pdf": "slidev export slides/slides.md --output docs/workshop-pi-mom-slides.pdf --format pdf"
   },
   "devDependencies": {
     "@slidev/cli": "^51.4.0",
