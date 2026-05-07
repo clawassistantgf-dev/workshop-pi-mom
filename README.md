@@ -4,7 +4,7 @@ Workshop **Les Fadas de l’IA** — déployer **pi-mom** (fork [clawassistantgf
 
 ## Dépôt public
 
-Tout le parcours (scripts, slides Slidev, documentation) est **dans ce repo** : les participants utilisent surtout les **URLs `raw.githubusercontent.com`** pour `curl` sur le serveur. Il n’est **pas obligatoire** d’héberger un site séparé ; une **GitHub Page** (optionnelle) peut servir de vitrine pour le deck exporté — voir plus bas.
+Tout le parcours (scripts, slides Slidev, documentation) est **dans ce repo** : les participants utilisent souvent les **URLs `raw.githubusercontent.com`** pour `curl` sur le serveur. La **doc lisible** pour l’humain peut être servie par **GitHub Pages** depuis le dossier **`/docs`** (`index.html` + `.nojekyll`).
 
 ## Arborescence
 
@@ -13,7 +13,7 @@ Tout le parcours (scripts, slides Slidev, documentation) est **dans ce repo** : 
 | **`01-secure.sh`**, **`02-install.sh`**, **`03-configure.sh`** | Scripts atelier — **à la racine** pour des liens `raw` stables (ne pas les déplacer sans mettre à jour toutes les URLs). |
 | **`slides/slides.md`** | Présentation Slidev (atelier). |
 | **`components/`**, **`composables/`**, **`vite.config.ts`** | QR / suivi LAN et middleware dev Slidev. |
-| **`docs/`** | Guides : [UPDATE](docs/UPDATE.md), [MISSIONS](docs/MISSIONS.md), [STRUCTURE_GUIDE](docs/STRUCTURE_GUIDE.md), [prompt Windows](docs/prompt-script2-windows/), [index des docs](docs/index.html). |
+| **`docs/`** | **Page d’aide** : [`docs/index.html`](docs/index.html) (GitHub Pages depuis `/docs`) — débogage **script 2 · Windows**, copie du prompt + boutons ChatGPT / Claude / Gemini. Guides : [UPDATE](docs/UPDATE.md), [MISSIONS](docs/MISSIONS.md), [STRUCTURE_GUIDE](docs/STRUCTURE_GUIDE.md). Fichier [`prompt-deblocage-script2-windows-FR.txt`](docs/prompt-deblocage-script2-windows-FR.txt). Ancienne URL `docs/prompt-script2-windows/` → redirection vers l’accueil. |
 | **`CHANGES.md`** | Journal des pivots majeurs du workshop. |
 
 ## Slides (Slidev)

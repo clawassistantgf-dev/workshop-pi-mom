@@ -7,6 +7,12 @@
 - **`docs/prompt-deblocage-script2-windows-FR.txt`** (déplacé depuis la racine) ; **`README.md`** (structure, URLs `raw`, option GitHub Pages).
 - **`.gitignore`** — `node_modules/`, `dist/`, `.slidev/`
 
+### Pages GitHub (`docs/`)
+
+- **`docs/index.html`** — page unique : aide **script 2 · Windows** en premier (copie + ChatGPT / Claude / Gemini), liens secondaires vers les Markdown sur GitHub.
+- **`docs/.nojekyll`** — désactive Jekyll pour que l’HTML soit servi tel quel.
+- **`docs/prompt-script2-windows/`** — redirection vers `index.html#script-2-debug`.
+
 ## v2 (pivot direct + structure)
 
 - **`02-install.sh`** : Docker **optionnel** (`--with-docker` ou `INSTALL_DOCKER=1`). Lingering systemd conservé. Vérifs finales adaptées si Docker absent.

@@ -3,47 +3,398 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Workshop pi-mom — documentation</title>
+  <meta name="description" content="Débogage script 2 · workshop pi-mom · Windows — ouvrir ChatGPT, Claude ou Gemini avec le prompt prêt à coller." />
+  <title>Workshop pi-mom — aide</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; color: #1c2430; line-height: 1.5; }
-    h1 { font-size: 1.35rem; margin-bottom: 0.5rem; }
-    p.meta { color: #5a6674; font-size: 0.95rem; margin-top: 0; }
-    ul { padding-left: 1.25rem; }
-    li { margin: 0.5rem 0; }
-    a { color: #0b6bcb; }
-    code { font-size: 0.9em; background: #f0f3f7; padding: 0.1rem 0.35rem; border-radius: 4px; }
-    .section { margin-top: 1.75rem; }
-    .hint { font-size: 0.85rem; color: #5a6674; margin-top: 1.5rem; }
+    :root {
+      --bg: #fafafa;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --ok: #059669;
+      --ok-bg: #ecfdf5;
+      --err: #b91c1c;
+      --err-bg: #fef2f2;
+      --gpt: #10a37f;
+      --claude: #d4a27f;
+      --gemini: #4285f4;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 1rem;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap {
+      max-width: 36rem;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+    .eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin: 0 0 0.5rem;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.75rem;
+      line-height: 1.25;
+    }
+    .lead {
+      color: #374151;
+      margin: 0 0 1.5rem;
+      font-size: 0.95rem;
+    }
+    .lead kbd {
+      font-size: 0.85em;
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+      background: #fff;
+      border: 1px solid var(--border);
+      font-family: ui-monospace, monospace;
+    }
+    .debug-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.25rem 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .explain-tiny {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin: 0 0 1rem;
+      padding: 0.65rem 0.75rem;
+      background: #f9fafb;
+      border-radius: 8px;
+      border-left: 3px solid #f59e0b;
+    }
+    .ai-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+    @media (min-width: 480px) {
+      .ai-grid { grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; }
+    }
+    .ai-grid button {
+      font: inherit;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.75rem 0.5rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s;
+    }
+    .ai-grid button:hover { filter: brightness(1.06); }
+    .ai-grid button:active { transform: scale(0.97); }
+    .ai-grid button:disabled { opacity: 0.55; cursor: wait; }
+    .btn-gpt { background: var(--gpt); box-shadow: 0 2px 0 #0c7a5c; }
+    .btn-claude { background: #c17f47; box-shadow: 0 2px 0 #9a6234; }
+    .btn-gemini { background: var(--gemini); box-shadow: 0 2px 0 #2c5aa0; }
+    .btn-copy {
+      width: 100%;
+      font: inherit;
+      font-weight: 600;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+      margin-bottom: 0.75rem;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    }
+    .btn-copy:hover { border-color: #9ca3af; }
+    .btn-copy.copied {
+      border-color: var(--ok);
+      background: var(--ok-bg);
+      color: var(--ok);
+      animation: pop 0.45s ease;
+    }
+    @keyframes pop {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+    #banner {
+      min-height: 2.75rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      margin-bottom: 1rem;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      line-height: 1.4;
+      animation: slideIn 0.35s ease;
+    }
+    #banner.show { display: flex; }
+    #banner.ok { background: var(--ok-bg); color: #065f46; border: 1px solid #a7f3d0; }
+    #banner.bad { background: var(--err-bg); color: var(--err); border: 1px solid #fecaca; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    details.prompt-box {
+      margin-top: 0.25rem;
+    }
+    details.prompt-box summary {
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--muted);
+      padding: 0.35rem 0;
+      user-select: none;
+    }
+    details.prompt-box summary:hover { color: var(--text); }
+    #prompt-preview {
+      margin: 0.5rem 0 0;
+      padding: 0.75rem;
+      font-size: 0.72rem;
+      line-height: 1.45;
+      background: #f3f4f6;
+      border-radius: 8px;
+      overflow: auto;
+      max-height: 40vh;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, "Cascadia Code", monospace;
+      border: 1px solid var(--border);
+    }
+    .more {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .more h2 {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 0 0 0.75rem;
+    }
+    .more a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    .more a:hover { text-decoration: underline; }
+    .more ul {
+      margin: 0;
+      padding-left: 1.1rem;
+      font-size: 0.9rem;
+      color: #374151;
+    }
+    .more li { margin: 0.4rem 0; }
+    footer {
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    footer a { color: #2563eb; }
   </style>
 </head>
 <body>
-  <h1>Documentation atelier</h1>
-  <p class="meta">Dépôt <a href="https://github.com/clawassistantgf-dev/workshop-pi-mom">clawassistantgf-dev/workshop-pi-mom</a> — Les Fadas de l’IA</p>
+  <div class="wrap">
+    <section id="script-2-debug" class="debug-card" aria-labelledby="titre-debug">
+      <p class="eyebrow">Windows · débogage</p>
+      <h1 id="titre-debug">Bloqué au script 2&nbsp;?</h1>
+      <p class="lead">
+        Installe la stack agent sur le VPS depuis ton PC. Choisis un assistant : le <strong>prompt complet</strong> est <strong>copié dans le presse-papiers</strong>, la fenêtre s’ouvre — il reste à coller avec <kbd>Ctrl</kbd> + <kbd>V</kbd> (ou clic droit → coller).
+      </p>
+      <p class="explain-tiny">
+        ChatGPT / Claude / Gemini n’acceptent pas un texte long dans l’URL : c’est normal. Ce flux <strong>copie puis ouvre</strong> pour éviter les erreurs.
+      </p>
 
-  <div class="section">
-    <strong>Mises à jour (VPS)</strong>
-    <ul>
-      <li><a href="https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/UPDATE.md"><code>UPDATE.md</code></a> — mettre à jour <strong>pi-mom</strong> (fork pi-mono) : relancer le <strong>script 2</strong>, puis <code>systemctl --user restart pi-mom</code> ; mise à jour des scripts <code>01</code>–<code>03</code> avec <code>curl</code>.</li>
-    </ul>
+      <div id="banner" role="status" aria-live="polite"></div>
+
+      <div class="ai-grid" role="group" aria-label="Ouvrir un assistant avec le prompt copié">
+        <button type="button" class="btn-gpt" data-open="https://chatgpt.com/" data-name="ChatGPT" title="Copier le prompt et ouvrir ChatGPT">
+          ChatGPT
+        </button>
+        <button type="button" class="btn-claude" data-open="https://claude.ai/new" data-name="Claude" title="Copier le prompt et ouvrir Claude">
+          Claude
+        </button>
+        <button type="button" class="btn-gemini" data-open="https://gemini.google.com/app" data-name="Gemini" title="Copier le prompt et ouvrir Gemini">
+          Gemini
+        </button>
+      </div>
+
+      <button type="button" class="btn-copy" id="btn-copy-only" aria-label="Copier le prompt sans ouvrir de site">
+        Copier le prompt seulement
+      </button>
+
+      <details class="prompt-box">
+        <summary>Afficher le texte du prompt</summary>
+        <pre id="prompt-preview" aria-live="polite">Chargement…</pre>
+      </details>
+    </section>
+
+    <section class="more">
+      <h2>Autres docs (GitHub)</h2>
+      <ul>
+        <li><a href="https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/UPDATE.md">Mise à jour pi-mom sur le VPS</a></li>
+        <li><a href="https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/MISSIONS.md">Après l’atelier · GitHub SSH</a></li>
+        <li><a href="https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/STRUCTURE_GUIDE.md">Structure du workspace</a></li>
+      </ul>
+    </section>
+
+    <footer>
+      Dépôt <a href="https://github.com/clawassistantgf-dev/workshop-pi-mom">clawassistantgf-dev/workshop-pi-mom</a> — Les Fadas de l’IA.
+    </footer>
   </div>
 
-  <div class="section">
-    <strong>Après l’atelier</strong>
-    <ul>
-      <li><a href="https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/MISSIONS.md"><code>MISSIONS.md</code></a> — GitHub en SSH, premier projet agentique.</li>
-      <li><a href="https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/STRUCTURE_GUIDE.md"><code>STRUCTURE_GUIDE.md</code></a> — arborescence <code>~/agent-workspace</code>.</li>
-      <li><a href="https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/SYSTEM_TEMPLATE.md"><code>SYSTEM_TEMPLATE.md</code></a> — base pour <code>SYSTEM.md</code>.</li>
-    </ul>
-  </div>
+  <script>
+    (function () {
+      const RAW_FALLBACK =
+        "https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/docs/prompt-deblocage-script2-windows-FR.txt";
+      const LOCAL_TXT = "./prompt-deblocage-script2-windows-FR.txt";
 
-  <div class="section">
-    <strong>Aide Windows (script 2 bloqué)</strong>
-    <ul>
-      <li><a href="https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/prompt-deblocage-script2-windows-FR.txt"><code>docs/prompt-deblocage-script2-windows-FR.txt</code></a> — texte source du prompt (copie directe possible).</li>
-      <li><a href="./prompt-script2-windows/">Page « prompt ChatGPT »</a> — copier-coller encadré + bouton.</li>
-    </ul>
-  </div>
+      const preview = document.getElementById("prompt-preview");
+      const banner = document.getElementById("banner");
+      const btnCopyOnly = document.getElementById("btn-copy-only");
+      let promptText = "";
 
-  <p class="hint">Sur GitHub : dossier <code>docs/</code> — les liens ci-dessus ouvrent le rendu Markdown sur le dépôt.</p>
+      function showBanner(ok, message) {
+        banner.className = "show " + (ok ? "ok" : "bad");
+        banner.textContent = message;
+        banner.style.display = "flex";
+      }
+      function hideBannerSoon(ms) {
+        clearTimeout(showBannerSoon._t);
+        showBannerSoon._t = setTimeout(function () {
+          banner.classList.remove("show", "ok", "bad");
+          banner.style.display = "none";
+          banner.textContent = "";
+        }, ms);
+      }
+
+      function fallbackCopy(str) {
+        var ta = document.createElement("textarea");
+        ta.value = str;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, str.length);
+        var ok = false;
+        try {
+          ok = document.execCommand("copy");
+        } catch (_e) {}
+        document.body.removeChild(ta);
+        return ok;
+      }
+
+      async function copyPrompt() {
+        if (!promptText) return false;
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(promptText);
+            return true;
+          }
+        } catch (_e) {}
+        return fallbackCopy(promptText);
+      }
+
+      async function loadPrompt() {
+        var candidates = [LOCAL_TXT, RAW_FALLBACK];
+        for (var i = 0; i < candidates.length; i++) {
+          try {
+            var res = await fetch(candidates[i], { cache: "no-store" });
+            if (res.ok) {
+              promptText = (await res.text()).replace(/^\uFEFF/, "").trim();
+              if (promptText.length > 50) {
+                preview.textContent = promptText;
+                return;
+              }
+            }
+          } catch (_e) {}
+        }
+        preview.textContent =
+          "Impossible de charger le prompt. Ouvre la page en HTTPS (GitHub Pages) ou copie depuis le fichier docs/prompt-deblocage-script2-windows-FR.txt sur le dépôt.";
+        showBanner(false, "Fichier prompt introuvable — utilise le lien GitHub ci-dessous.");
+      }
+
+      async function flowOpen(url, name) {
+        var btns = document.querySelectorAll(".ai-grid button");
+        btns.forEach(function (b) {
+          b.disabled = true;
+        });
+        try {
+          var ok = await copyPrompt();
+          if (ok) {
+            showBanner(
+              true,
+              "Copié. Dans " +
+                name +
+                ", ouvrez une nouvelle conversation si besoin, puis collez avec Ctrl+V (ou clic droit → Coller)."
+            );
+            hideBannerSoon(9000);
+            window.open(url, "_blank", "noopener,noreferrer");
+          } else {
+            showBanner(
+              false,
+              "Copie impossible (essaie en HTTPS, pas en file://). Sélectionne le texte dans « Afficher le texte du prompt »."
+            );
+          }
+        } finally {
+          btns.forEach(function (b) {
+            b.disabled = false;
+          });
+        }
+      }
+
+      document.querySelectorAll(".ai-grid button").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          flowOpen(btn.getAttribute("data-open"), btn.getAttribute("data-name"));
+        });
+      });
+
+      btnCopyOnly.addEventListener("click", async function () {
+        btnCopyOnly.classList.remove("copied");
+        void btnCopyOnly.offsetWidth;
+        var ok = await copyPrompt();
+        if (ok) {
+          btnCopyOnly.classList.add("copied");
+          btnCopyOnly.textContent = "Copié — prêt à coller";
+          showBanner(true, "C’est dans le presse-papiers.");
+          hideBannerSoon(5000);
+          setTimeout(function () {
+            btnCopyOnly.classList.remove("copied");
+            btnCopyOnly.textContent = "Copier le prompt seulement";
+          }, 2800);
+        } else {
+          showBanner(
+            false,
+            "Copie refusée par le navigateur. Ouvre cette page en https:// ou sélectionne le texte à la main."
+          );
+        }
+      });
+
+      if (document.location.hash === "#script-2-debug" || document.location.hash === "#script2") {
+        document.getElementById("script-2-debug").scrollIntoView({ behavior: "smooth" });
+      }
+
+      loadPrompt();
+    })();
+  </script>
 </body>
 </html>
