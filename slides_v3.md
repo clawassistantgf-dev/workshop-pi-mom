@@ -963,8 +963,8 @@ layout: default
 <div class="flex gap-4 items-start">
   <div class="text-2xl">🔄</div>
   <div>
-    <div class="font-medium">Gardez à jour</div>
-    <div class="text-sm text-gray-500 mt-1"><code>npm install -g @mariozechner/pi-mom</code> — une ligne, une fois par semaine.</div>
+    <div class="font-medium">Gardez pi-mom à jour (fork Les Fadas)</div>
+    <div class="text-sm text-gray-500 mt-1">Ce n’est <strong>pas</strong> <code>npm install -g @mariozechner/pi-mom</code> (paquet upstream). Sur le VPS : <strong>relancer le script 2</strong> (même <code>curl</code> que l’atelier), puis <code>systemctl --user restart pi-mom</code> — voir <code>docs/UPDATE.md</code> sur le repo workshop.</div>
   </div>
 </div>
 
@@ -1073,6 +1073,24 @@ layout: default
 layout: default
 ---
 
+# Mises à jour sur le VPS
+
+<div class="text-sm text-gray-700 max-w-3xl space-y-4 leading-relaxed">
+
+<p><strong>Code <code>pi-mom</code> (fork)</strong> : derniers changements sur <code>github.com/clawassistantgf-dev/pi-mono</code> → sur le serveur, <strong>relancez le script 2</strong> — il resynchronise <code>~/pi-mono-fadas</code>, rebuild et réinstalle le CLI. Puis <code>systemctl --user restart pi-mom</code>.</p>
+
+<p><strong>Scripts atelier uniquement</strong> (<code>01</code> / <code>02</code> / <code>03</code>) : même idée, <code>curl</code> depuis <code>raw.githubusercontent.com/…/workshop-pi-mom/main/</code> puis exécution.</p>
+
+<p class="text-xs text-gray-500 mb-0">Guide complet : <strong><code>docs/UPDATE.md</code></strong> dans le dépôt workshop — pas besoin de publier sur le registre npm pour suivre notre fork.</p>
+
+</div>
+
+<pre class="text-xs bg-gray-50 border border-gray-200 rounded-lg p-3 mt-4 max-w-3xl text-left"><code>curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/02-install.sh -o /tmp/ws-pi-mom-02-install.sh && bash /tmp/ws-pi-mom-02-install.sh</code></pre>
+
+---
+layout: default
+---
+
 # 🚨 Si ça plante — les 2 pièges connus
 
 <div class="space-y-5 mt-4">
@@ -1114,7 +1132,7 @@ layout: intro
 Votre agent tourne 24h/24 sur votre serveur.
 
 <div class="mt-6 space-y-1 text-sm text-gray-500">
-  <div>github.com/clawassistantgf-dev/workshop-pi-mom <span class="text-xs text-gray-400">— scripts du workshop</span></div>
+  <div>github.com/clawassistantgf-dev/workshop-pi-mom <span class="text-xs text-gray-400">— scripts + <code>docs/UPDATE.md</code> · <code>docs/MISSIONS.md</code></span></div>
   <div>github.com/clawassistantgf-dev/pi-mono <span class="text-xs text-gray-400">— pi-mom version Les Fadas</span></div>
   <div>github.com/badlogic/pi-mono <span class="text-xs text-gray-400">— pi-mono original (Mario Zechner)</span></div>
 </div>

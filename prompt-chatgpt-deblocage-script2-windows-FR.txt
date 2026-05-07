@@ -47,6 +47,7 @@ CE QUE JE VEUX QUE TU FASSES (OBLIGATOIRE)
    • **Docker** : dans le script **2**, l’installation Docker est **optionnelle** (`--with-docker` ou `INSTALL_DOCKER=1`). **pi-mom** peut tourner **sans Docker** sur le VPS ; ne me dis pas que Docker est obligatoire pour l’agent.
    • **Script 3** : la version officielle sur `main` **ne demande pas** d’URL GitHub ni HTTPS ; Git reste **local** sur le VPS, liaison GitHub **après** l’atelier (SSH), voir `docs/MISSIONS.md` sur le repo workshop. Si je vois un prompt « URL repo GitHub », c’est souvent un **vieux fichier** : me faire **`rm` + retélécharger** le script depuis `raw.githubusercontent.com/.../main/03-configure.sh` puis vérifier avec `grep` qu’il n’y a pas `URL HTTPS`.
    • **Permissions Git** sur `~/agent-workspace` : si erreur du type *insufficient permission for .git/objects*, souvent des dossiers sous **`root`** — me faire corriger avec **`sudo chown -R MON_USER:MON_USER ~/agent-workspace`** (ou au minimum `~/.git`), puis relancer le script 3.
+   • **Mise à jour du binaire** sans npm public : **relancer le script 2** sur le VPS puis `systemctl --user restart pi-mom` — détail officiel **`docs/UPDATE.md`** sur le repo workshop-pi-mom.
 
 ═══════════════════════════════════════════════════════════════
 MON ÉTAT ACTUEL (à remplir par moi après ton premier message)

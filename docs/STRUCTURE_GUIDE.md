@@ -22,6 +22,11 @@ bash tools/validate-structure.sh ~/agent-workspace
 
 Le hook `pre-commit` lance la même validation (sortie complète en cas d’échec).
 
+## Voir aussi
+
+- **Mise à jour du binaire `pi-mom` et des scripts atelier** : `docs/UPDATE.md`
+- **Missions GitHub après l’atelier** : `docs/MISSIONS.md`
+
 ## Nouveau projet
 
 ```bash

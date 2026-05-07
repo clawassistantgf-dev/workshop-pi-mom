@@ -6,7 +6,7 @@ Quand les scripts `01`–`03` sont passés et que **l’agent répond dans Slack
 
 Ton workspace vit sur le serveur (`~/agent-workspace`). **GitHub n’est pas obligatoire** pour que l’agent fonctionne. En revanche, c’est le **nuage le plus simple** pour : sauvegarder l’historique Git, synchroniser depuis plusieurs machines, et partager un dépôt propre. Tout le flux **push se fait en SSH** (`git@github.com` — pas de HTTPS pour ce workshop).
 
-**Mettre à jour le binaire `pi-mom`** (nouvelle version du fork) **sans npmjs** : voir **`docs/UPDATE.md`** — en pratique, relancer le **script 2** sur le VPS puis `systemctl --user restart pi-mom`.
+**Mettre à jour le binaire `pi-mom`** (nouvelle version du fork **pi-mono**) **sans publier sur npm** : **`docs/UPDATE.md`** — en résumé, **relancer le script 2** sur le VPS puis `systemctl --user restart pi-mom`. Pour ne mettre à jour que les **scripts** `01`–`03`, même principe avec `curl` sur `raw.githubusercontent.com` (détails dans `UPDATE.md`).
 
 ---
 

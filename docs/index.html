@@ -3,11 +3,46 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="refresh" content="0; url=prompt-script2-windows/" />
-  <title>Workshop pi-mom — aides</title>
-  <style>body{font-family:system-ui,sans-serif;max-width:40rem;margin:2rem auto;padding:0 1rem;color:#334}a{color:#0b6bcb}</style>
+  <title>Workshop pi-mom — documentation</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; color: #1c2430; line-height: 1.5; }
+    h1 { font-size: 1.35rem; margin-bottom: 0.5rem; }
+    p.meta { color: #5a6674; font-size: 0.95rem; margin-top: 0; }
+    ul { padding-left: 1.25rem; }
+    li { margin: 0.5rem 0; }
+    a { color: #0b6bcb; }
+    code { font-size: 0.9em; background: #f0f3f7; padding: 0.1rem 0.35rem; border-radius: 4px; }
+    .section { margin-top: 1.75rem; }
+    .hint { font-size: 0.85rem; color: #5a6674; margin-top: 1.5rem; }
+  </style>
 </head>
 <body>
-  <p>Redirection vers le <a href="./prompt-script2-windows/">prompt « déblocage script 2 » (Windows)</a>…</p>
+  <h1>Documentation atelier</h1>
+  <p class="meta">Dépôt <a href="https://github.com/clawassistantgf-dev/workshop-pi-mom">clawassistantgf-dev/workshop-pi-mom</a> — Les Fadas de l’IA</p>
+
+  <div class="section">
+    <strong>Mises à jour (VPS)</strong>
+    <ul>
+      <li><a href="https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/UPDATE.md"><code>UPDATE.md</code></a> — mettre à jour <strong>pi-mom</strong> (fork pi-mono) : relancer le <strong>script 2</strong>, puis <code>systemctl --user restart pi-mom</code> ; mise à jour des scripts <code>01</code>–<code>03</code> avec <code>curl</code>.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <strong>Après l’atelier</strong>
+    <ul>
+      <li><a href="https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/MISSIONS.md"><code>MISSIONS.md</code></a> — GitHub en SSH, premier projet agentique.</li>
+      <li><a href="https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/STRUCTURE_GUIDE.md"><code>STRUCTURE_GUIDE.md</code></a> — arborescence <code>~/agent-workspace</code>.</li>
+      <li><a href="https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/SYSTEM_TEMPLATE.md"><code>SYSTEM_TEMPLATE.md</code></a> — base pour <code>SYSTEM.md</code>.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <strong>Aide Windows (script 2 bloqué)</strong>
+    <ul>
+      <li><a href="./prompt-script2-windows/">Page « prompt ChatGPT »</a> — copier-coller le prompt de déblocage.</li>
+    </ul>
+  </div>
+
+  <p class="hint">Sur GitHub : dossier <code>docs/</code> — les liens ci-dessus ouvrent le rendu Markdown sur le dépôt.</p>
 </body>
 </html>

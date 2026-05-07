@@ -1,5 +1,7 @@
 # Mise à jour de pi-mom (fork Les Fadas, sans npmjs)
 
+**TL;DR — binaire à jour :** sur le VPS, utilisateur normal → **relancer** `02-install.sh` (même commande `curl` que l’atelier) → **`systemctl --user restart pi-mom`**. Détail ci-dessous ; scripts `01`/`02`/`03` seuls : autre section.
+
 Stratégie simple : **le code du CLI** vient du fork **[clawassistantgf-dev/pi-mono](https://github.com/clawassistantgf-dev/pi-mono)** (clone par défaut **`~/pi-mono-fadas`**, branche **`main`**). On ne publie pas de paquet sur le registre npm : on **synchronise le dépôt** et on **rebuild** comme lors de l’installation.
 
 ---
