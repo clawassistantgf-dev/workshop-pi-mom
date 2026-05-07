@@ -1,0 +1,65 @@
+Après l’atelier — ce que tu fais maintenant
+(Les Fadas de l’IA · workshop pi-mom)
+
+Une consigne claire par situation. Tout le matériel (scripts, doc, PDF des slides) est dans ce dépôt :
+https://github.com/clawassistantgf-dev/workshop-pi-mom
+
+
+▸ 1 — Tu étais bloqué au script 2 (Windows / étapes pi-mono)
+
+À faire, dans l’ordre :
+
+1) Ouvre la page d’aide (boutons ChatGPT, Claude, Gemini + texte du prompt à coller) :
+   https://clawassistantgf-dev.github.io/workshop-pi-mom/
+   Colle le prompt dans l’assistant et suis les étapes pour débloquer l’installation sur le PC ou sur le VPS.
+
+2) Quand le script 2 passe, enchaîne le script 3 sur le VPS comme pendant l’atelier (une commande curl puis exécution — voir le dépôt ou le PDF des slides).
+
+3) Si la page ne charge pas le prompt : récupère le fichier texte suivant sur GitHub et colle-le à la main dans ton assistant :
+   https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/prompt-deblocage-script2-windows-FR.txt
+
+En bref : une page web + un prompt guidé — tu n’es pas seul face à l’erreur.
+
+
+▸ 2 — Tu avais fini le setup (pi-mom qui tourne)
+
+Pour rester à jour (même chaîne que pendant l’atelier, sans passer par npm public) :
+
+Sur le VPS, en utilisateur normal, relance le script 2 :
+
+curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/02-install.sh -o /tmp/ws-pi-mom-02-install.sh && bash /tmp/ws-pi-mom-02-install.sh
+
+Docker reste optionnel ; pi-mom n’a pas besoin de Docker. L’agent tourne sur le serveur avec systemd, en exécution directe sur le workspace — pas d’ancienne sandbox Docker.
+
+Puis redémarre le service :
+
+systemctl --user restart pi-mom
+
+Ensuite, enchaîne les étapes post-atelier (SYSTEM.md, GitHub en SSH, premier projet dans projects/, etc.) — détaillées ici :
+https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/MISSIONS.md
+
+Mise à jour du binaire et des scripts : résumé ici :
+https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/UPDATE.md
+
+
+▸ 3 — Où tout avoir sous la main
+
+Dépôt (source unique)
+https://github.com/clawassistantgf-dev/workshop-pi-mom
+
+Aide déblocage script 2 (page web)
+https://clawassistantgf-dev.github.io/workshop-pi-mom/
+
+Slides en PDF (hors ligne, impression)
+https://clawassistantgf-dev.github.io/workshop-pi-mom/workshop-pi-mom-slides.pdf
+
+Mise à jour pi-mom sur le VPS
+https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/UPDATE.md
+
+Après l’atelier (missions, GitHub SSH)
+https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/MISSIONS.md
+
+Structure du workspace agent
+https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/STRUCTURE_GUIDE.md
+
+Pour régénérer le PDF en local : npm run export:pdf (après npm install dans le dépôt) — le fichier produit est docs/workshop-pi-mom-slides.pdf
