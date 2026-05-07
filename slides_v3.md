@@ -18,7 +18,6 @@ Votre agent IA personnel, sur votre serveur, opérationnel en moins de 2h.
   <span class="px-3 py-1 rounded-full text-xs bg-teal-100 text-teal-700">Ubuntu 24.04 LTS</span>
   <span class="px-3 py-1 rounded-full text-xs bg-amber-100 text-amber-700">pi-mom</span>
   <span class="px-3 py-1 rounded-full text-xs bg-blue-100 text-blue-700">Slack</span>
-  <span class="px-3 py-1 rounded-full text-xs bg-orange-100 text-orange-700">Cloudflare</span>
 </div>
 
 <IntroLanAccess />
@@ -388,7 +387,7 @@ layout: default
 <div class="grid grid-cols-2 gap-8">
 <div>
 
-**Workspace**
+<p class="font-semibold mb-2">Workspace</p>
 <v-clicks>
 
 - slack.com → "Create a workspace"
@@ -400,13 +399,13 @@ layout: default
 </div>
 <div>
 
-**Slack App**
+<p class="font-semibold mb-2">Slack App</p>
 <v-clicks>
 
 - api.slack.com/apps → From Scratch
-- Socket Mode → **ON**
-- App Token `connections:write` → copier `xapp-...`
-- Bot Scopes → Install → copier `xoxb-...`
+- Socket Mode → <strong>ON</strong>
+- App Token <code>connections:write</code> → copier <code>xapp-...</code>
+- Bot Scopes → Install → copier <code>xoxb-...</code>
 
 </v-clicks>
 
@@ -434,23 +433,41 @@ layout: default
 layout: default
 ---
 
-# Étape 3 — Repo GitHub privé
+# Étape 3 — Aujourd’hui, on va jusqu’où ?
+
+<div class="text-sm text-gray-600 mb-4 leading-relaxed max-w-3xl">
+
+<strong>But de la séance</strong> : votre <strong>agent répond dans Slack</strong> sur le VPS, workspace propre.<br>
+Rien d’autre n’est obligatoire pour dire « l’atelier est réussi ».
+
+</div>
 
 <v-clicks>
 
-1. github.com → **New repository**
-2. Nom : `mon-agent` — **Private** ✓ — **Initialize with README** ✓ *(important)*
-3. Copier l'URL du repo → on en a besoin au Script 3
+<ul class="text-sm space-y-3 mt-2 max-w-3xl list-disc pl-6 text-left break-words">
+
+<li><strong>Script 1</strong> — Clé SSH (PC) + compte Linux + pare-feu. <em>Une fois.</em></li>
+
+<li><strong>Script 2</strong> — Node, build <strong>pi-mom</strong>, <code>~/agent-workspace</code>, <strong>lingering</strong> <span class="text-gray-500">(actif sans session SSH)</span>.</li>
+
+<li><strong>Script 3</strong> — Slack, LLM, nom, <code>SYSTEM.md</code>, dossiers <code>projects/</code> <code>missions/</code> <code>tools/</code>, <strong>systemd</strong>.</li>
+
+</ul>
 
 </v-clicks>
 
-<div v-click class="mt-6 font-mono text-sm bg-gray-50 border border-gray-200 rounded-lg p-4 text-gray-600 space-y-1">
-  <div>Backup automatique toutes les 6h → GitHub privé</div>
-  <div class="text-amber-600">⚠️ .env JAMAIS commité — protégé dès le Script 2 par .gitignore</div>
+<div v-click class="mt-5 p-4 rounded-xl bg-violet-50 border border-violet-200 text-sm text-violet-950 max-w-3xl leading-snug">
+
+<p class="font-medium mb-2">Pas de GitHub dans le script 3 ?</p>
+
+<p class="mb-0">D’abord <strong>voir l’agent vivre</strong>. Git reste <strong>local sur le VPS</strong> — pas besoin de compte GitHub pour la démo.</p>
+
 </div>
 
-<div v-click class="mt-3 text-xs text-gray-500">
-  💡 Si vous oubliez de cocher "Initialize with README", le repo est vide — le push du Script 3 se passe différemment. Le plus simple : recommencez la création.
+<div v-click class="mt-4 p-4 rounded-xl bg-gray-50 border border-gray-200 text-sm text-gray-800 max-w-3xl leading-snug">
+
+<p class="mb-0"><strong>GitHub</strong> plus tard (backup / partage) : <strong>SSH uniquement</strong>, voir <code>docs/MISSIONS.md</code> <em>(après l’exercice Slack)</em>.</p>
+
 </div>
 
 ---
@@ -501,108 +518,101 @@ layout: default
 layout: default
 ---
 
-# Étape 4 — SSH + Script 1
+# Avant le serveur — générer une clé SSH
 
-**Première connexion au serveur** *(IP et mot de passe = email Hostinger)*
+<div class="text-sm text-gray-600 mb-3 max-w-3xl leading-snug space-y-2">
+
+<p class="mb-0"><strong>Même nom partout :</strong> <code>MON_AGENT</code> → identifiant court <em>sans espaces</em> (ex. <code>marie</code>, <code>bot01</code>).</p>
+
+<p class="mb-0">Nom du fichier sous <code>~/.ssh/</code>, même nom en <code>ssh -i …</code> et user Linux au script&nbsp;1.</p>
+
+</div>
+
+À faire **sur votre PC** (terminal local), pas sur le VPS.
+
+## Mac
 
 ```bash
-ssh -i ~/.ssh/lej root@VOTRE_IP_HOSTINGER
+ssh-keygen -t ed25519 -f ~/.ssh/MON_AGENT -N "" && cat ~/.ssh/MON_AGENT.pub | pbcopy && echo "✅ Clé copiée"
 ```
 
-<div class="text-xs text-gray-500 mt-2 -mb-1">
-  <code>-i</code> = chemin de votre <strong>clé privée</strong> (le même nom que pour <code>ssh-keygen -f ~/.ssh/lej</code> — remplacez <code>lej</code> par celui de votre agent). Pas encore de clé sur la machine ? <code>ssh root@VOTRE_IP_HOSTINGER</code> avec le mot de passe root, puis générez la clé (slide suivante) avant de coller la pub dans le script.
-</div>
-
-<v-clicks>
-
-<div class="text-sm text-gray-500">
-La première fois, SSH demande : <em>"Are you sure you want to continue connecting (yes/no/[fingerprint])?"</em><br>
-→ Tapez <strong>yes</strong> en entier puis Entrée. Puis collez le mot de passe root (rien ne s'affiche, c'est normal).
-</div>
-
-Dans **le même terminal** que votre session SSH **root sur le VPS** (invite du type <code>root@votre-serveur:~#</code>), lancez le script de sécurisation :
+## Linux
 
 ```bash
-# whoami doit afficher « root » · téléchargement sous $HOME limite « curl (23) » quand /tmp pose problème
-curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/01-secure.sh -o "$HOME/ws-pi-mom-01-secure.sh" && bash "$HOME/ws-pi-mom-01-secure.sh"
+ssh-keygen -t ed25519 -f ~/.ssh/MON_AGENT -N "" && cat ~/.ssh/MON_AGENT.pub | xclip -selection clipboard && echo "✅ Clé copiée"
 ```
 
-Si <code>curl</code> affiche encore <code>(23) Failure writing</code> : <code>df -h</code> (disque plein ?), puis essayez <code>-o /root/ws-pi-mom-01-secure.sh</code> à la place de <code>"$HOME/…"</code>.
+## Windows (PowerShell)
 
-Le script demande :
-- **Nom de votre agent** *(sera votre user Linux)*
-- **Mot de passe** *(double confirmation, invisible à la saisie)*
-- **Votre clé SSH publique** *(générée à l'étape suivante)*
+```powershell
+ssh-keygen -t ed25519 -f "$env:USERPROFILE\.ssh\MON_AGENT" -N '""'
+Get-Content "$env:USERPROFILE\.ssh\MON_AGENT.pub" | Set-Clipboard
+Write-Host "Copié dans le presse-papiers"
+```
 
-Résultat : root désactivé · UFW actif · règle sudo prête pour le Script 2
+<div class="mt-3 text-xs text-gray-500 max-w-3xl leading-snug">
 
-</v-clicks>
-
-<div v-click class="mt-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800">
-  ⚠️ <strong>Ne fermez pas la fenêtre root</strong> avant d'avoir testé la reconnexion sur votre nouveau user. Sécurité.
-</div>
+Pas de <code>xclip</code> sur Linux ? <code>sudo apt install xclip</code> ou ouvrez <code>cat ~/.ssh/MON_AGENT.pub</code> et copiez la ligne à la main.
 
 <div v-click class="mt-2 text-xs text-gray-500 italic">
-  💡 Une commande <code>curl … -o … && bash …</code> évite les soucis de <code>/dev/fd/…</code>. Pour le script&nbsp;1, la cible sous <strong><code>$HOME</code></strong> réduit les erreurs d’écriture sur certains VPS ; pour le&nbsp;2, <code>/tmp</code> reste indiqué si ça passe chez vous.
+
+💡 Une commande <code>curl … -o … && bash …</code> évite les soucis de <code>/dev/fd/…</code>. Pour le script&nbsp;1, télécharger sous <strong><code>$HOME</code></strong> limite l’erreur « curl (23) » sur certains VPS.
+
+</div>
 </div>
 
 ---
 layout: default
 ---
 
-# Générer votre clé SSH
+# Étape 4 — SSH + Script 1
 
-À faire **sur votre ordinateur** (pas sur le serveur). Remplacez `lej` par le nom de votre agent.
+<div class="text-sm text-gray-600 mb-2 max-w-3xl leading-snug">
 
-<div class="grid grid-cols-3 gap-4 mt-4 text-sm">
+<strong>Prérequis :</strong> clé créée (slide précédente). IP + mot de passe root = e-mail Hostinger.
 
-<div>
+</div>
 
-**🍎 Mac**
+**1) Connexion au VPS** — remplacez **`MON_AGENT`** (même nom que pour la clé) et **`VOTRE_IP`** :
+
 ```bash
-ssh-keygen -t ed25519 \
-  -f ~/.ssh/lej -N ""
-cat ~/.ssh/lej.pub | pbcopy
-echo "✅ Clé copiée"
+ssh root@VOTRE_IP
 ```
 
-</div>
+<ul class="text-sm text-gray-600 list-disc pl-5 max-w-3xl space-y-1 mt-2">
+<li>Première fois : si SSH demande la signature du serveur → tapez <code>yes</code> puis Entrée.</li>
+<li>Mot de passe root : rien ne s’affiche quand vous tapez, c’est normal.</li>
+<li>Pas de clé encore ? Générez-la sur la slide précédente, puis revenez ici.</li>
+</ul>
 
-<div>
+**2) Sur le VPS** (invite <code>root@…#</code>), lancer le script&nbsp;1 :
 
-**🐧 Linux**
 ```bash
-ssh-keygen -t ed25519 \
-  -f ~/.ssh/lej -N ""
-cat ~/.ssh/lej.pub | xclip \
-  -selection clipboard
-echo "✅ Clé copiée"
+curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/01-secure.sh -o "$HOME/ws-pi-mom-01-secure.sh" && bash "$HOME/ws-pi-mom-01-secure.sh"
 ```
 
+<v-clicks>
+
+<ul class="text-sm text-gray-700 list-disc pl-5 max-w-3xl space-y-1">
+<li><strong>Nom</strong> → votre futur user Linux (cohérent avec <code>MON_AGENT</code> si vous voulez vous simplifier la vie).</li>
+<li><strong>Mot de passe</strong> (double saisie, invisible).</li>
+<li><strong>Clé publique</strong> — collez celle du presse-papiers (slide d’avant).</li>
+</ul>
+
+<p class="text-sm text-gray-600 mt-2 max-w-3xl">Si <code>curl: (23) Failure writing</code> : <code>df -h</code>, puis essayez <code>-o /root/ws-pi-mom-01-secure.sh</code> à la place de <code>"$HOME/…"</code>.</p>
+
+</v-clicks>
+
+<div class="mt-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900 max-w-3xl">
+
+⚠️ Gardez la session <strong>root</strong> ouverte jusqu’à avoir testé la connexion avec votre <strong>nouvel utilisateur</strong>.
+
 </div>
 
-<div>
+<div v-click class="mt-2 text-xs text-gray-500 max-w-3xl">
 
-**🪟 Windows (PowerShell)**
-```powershell
-ssh-keygen -t ed25519 `
-  -f "$env:USERPROFILE\.ssh\lej" `
-  -N '""'
-Get-Content `
-  "$env:USERPROFILE\.ssh\lej.pub" `
-  | Set-Clipboard
-```
+💡 Télécharger le script sous <code>$HOME</code> évite souvent l’erreur curl (23) sur certains VPS.
 
-</div>
-
-</div>
-
-<div class="mt-4 text-sm text-gray-500">
-  Vous collez la clé publique dans le terminal serveur (clic droit → Coller) → le script fait le reste.
-</div>
-
-<div class="mt-2 text-xs text-gray-400">
-  Linux sans <code>xclip</code> ? Installez avec <code>sudo apt install xclip</code>, ou utilisez <code>cat ~/.ssh/lej.pub</code> et copiez à la main.
 </div>
 
 ---
@@ -627,8 +637,8 @@ curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom
 </div>
 
 <div class="p-3 rounded-lg border border-gray-200">
-  <div class="font-medium mb-1">🐋 Docker</div>
-  <div class="text-gray-500 text-xs">isolation des commandes que l'agent exécute</div>
+  <div class="font-medium mb-1">🐋 Docker <span class="text-gray-400 font-normal">(optionnel)</span></div>
+  <div class="text-gray-500 text-xs">seulement si <code>--with-docker</code> ou <code>INSTALL_DOCKER=1</code> — pi-mom ne l'utilise pas</div>
 </div>
 
 <div class="p-3 rounded-lg border border-gray-200">
@@ -662,12 +672,12 @@ layout: default
 
 <v-click>
 <div class="flex gap-4 items-start text-sm">
-  <div class="text-xl">🐋</div>
+  <div class="text-xl">🖥️</div>
   <div>
-    <div class="font-medium">Pourquoi Docker ?</div>
+    <div class="font-medium">Agent sur le serveur (sans sandbox Docker)</div>
     <div class="text-gray-500 text-xs mt-0.5">
-      L'agent va exécuter des commandes bash que <strong>vous</strong> lui demandez.
-      Docker permet de les sandboxer — l'agent ne peut pas écrire n'importe où sur le serveur.
+      <code>pi-mom</code> tourne avec <strong>votre utilisateur Unix</strong> : même pouvoir qu'un shell sur le VPS.
+      Soyez conscients des risques — pas de conteneur qui isole l'agent.
     </div>
   </div>
 </div>
@@ -701,18 +711,19 @@ layout: default
 </div>
 
 <div v-click class="mt-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800">
-  ⚠️ À la fin du script : <strong>déconnectez-vous puis reconnectez-vous</strong> (ou tapez <code>newgrp docker</code>) pour que le groupe Docker soit actif sans sudo.
+  ⚠️ Si vous avez installé Docker (<code>--with-docker</code>) : <strong>reconnectez-vous</strong> ou <code>newgrp docker</code> pour le groupe docker. Sinon, ignorez ce message.
 </div>
 
 ---
 layout: default
 ---
 
-# Roadmap pi-mom — version Les Fadas 🦞
+# Pi-mom Les Fadas — ce que ce build contient déjà 🦞
 
-<div class="text-sm text-gray-500 mb-4">
-  Vous installez aujourd'hui pi-mom officiel (Mario Zechner).<br>
-  Voici les <strong>features Les Fadas</strong> que je vais activer dans les prochaines sessions :
+<div class="text-sm text-gray-600 mb-4 max-w-3xl leading-snug">
+
+Vous installez le fork <strong>clawassistantgf-dev/pi-mono</strong> — build local au script&nbsp;2. Les points ci-dessous ne sont <strong>pas</strong> une feuille de route « à venir » : ils sont <strong>déjà livrés</strong> dans la version que vous compilez aujourd’hui.
+
 </div>
 
 <div class="grid grid-cols-2 gap-3 mt-4">
@@ -724,7 +735,7 @@ layout: default
     <span>Sabliers visibles dans Slack</span>
   </div>
   <div class="text-gray-500 text-xs">
-    Quand l'agent travaille, vous le voyez. Plus jamais le doute "est-ce qu'il a planté ?".
+    Pendant que l’agent travaille, vous voyez l’activité — moins de « est-ce qu’il a planté ? ».
   </div>
 </div>
 </v-click>
@@ -733,10 +744,10 @@ layout: default
 <div class="p-3 rounded-lg border border-gray-200">
   <div class="flex items-center gap-2 font-medium mb-1">
     <span class="text-xl">🚦</span>
-    <span>Queue agentique par thread</span>
+    <span>File d’attente par fil de discussion</span>
   </div>
   <div class="text-gray-500 text-xs">
-    Un seul call à la fois par conversation. Vous bombardez l'agent, il traite proprement, dans l'ordre.
+    Un flux ordonné par conversation : les messages sont traités proprement, dans l’ordre.
   </div>
 </div>
 </v-click>
@@ -748,7 +759,7 @@ layout: default
     <span>Mémoire persistante</span>
   </div>
   <div class="text-gray-500 text-xs">
-    L'historique sauvegardé entre les sessions. L'agent se souvient de ce qu'on a fait hier.
+    Historique conservé entre les sessions pour enchaîner sur ce qui a déjà été fait.
   </div>
 </div>
 </v-click>
@@ -757,18 +768,20 @@ layout: default
 <div class="p-3 rounded-lg border border-gray-200">
   <div class="flex items-center gap-2 font-medium mb-1">
     <span class="text-xl">🔄</span>
-    <span>SYSTEM.md auto-rechargé</span>
+    <span>Rechargement de SYSTEM.md</span>
   </div>
   <div class="text-gray-500 text-xs">
-    Vous éditez la personnalité de l'agent → il la relit tout seul. Pas de redémarrage.
+    Personnalité et règles : le fork est conçu pour intégrer les mises à jour de configuration sans friction manuelle.
   </div>
 </div>
 </v-click>
 
 </div>
 
-<div v-click class="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-700">
-  💡 Mon fork est sur <code>github.com/clawassistantgf-dev/pi-mono</code> — vous pouvez le suivre pour récupérer les features quand elles seront stables.
+<div v-click class="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-800 max-w-3xl">
+
+Sources : <code>github.com/clawassistantgf-dev/pi-mono</code> (fork) · upstream <code>github.com/badlogic/pi-mono</code>.
+
 </div>
 
 ---
@@ -852,27 +865,50 @@ layout: default
 curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/03-configure.sh -o /tmp/ws-pi-mom-03-configure.sh && bash /tmp/ws-pi-mom-03-configure.sh
 ```
 
-<div class="mt-4 space-y-2 text-sm">
+<div class="mt-4 space-y-2 text-sm max-w-3xl">
 
-Après avoir réussi **pi** + **/login**, le script&nbsp;3 pose **plusieurs questions** :
-
-<v-clicks>
-
-- Tokens Slack APP et Bot *(formats <code>xapp-</code> / <code>xoxb-</code>)*
-- Fournisseur et modèle LLM *(repris depuis votre <code>/login</code>, modifiables à la frappe)*
-- Prénom / surnom de l’agent
-- URL du repo GitHub privé *(facultatif)*
-
-</v-clicks>
+<p>Après avoir réussi <strong>pi</strong> + <code>/login</code>, le script&nbsp;3 demande le token Slack <strong>APP</strong>, le token Slack <strong>BOT</strong>, le fournisseur / modèle LLM et le <strong>nom</strong> de l’agent. <strong>Aucune</strong> question GitHub — c’est volontaire (voir <code>docs/MISSIONS.md</code> après l’atelier).</p>
 
 </div>
 
 <div v-click class="mt-4 flex flex-wrap gap-2 text-xs">
-  <span class="px-2 py-1 rounded-full bg-green-100 text-green-700">.env écrit</span>
+  <span class="px-2 py-1 rounded-full bg-green-100 text-green-700">.keys écrit</span>
   <span class="px-2 py-1 rounded-full bg-green-100 text-green-700">SYSTEM.md créé</span>
-  <span class="px-2 py-1 rounded-full bg-green-100 text-green-700">git init + push</span>
-  <span class="px-2 py-1 rounded-full bg-green-100 text-green-700">cron backup 6h</span>
-  <span class="px-2 py-1 rounded-full bg-green-100 text-green-700">systemd actif</span>
+  <span class="px-2 py-1 rounded-full bg-green-100 text-green-700">structure projects/ missions/ tools/</span>
+  <span class="px-2 py-1 rounded-full bg-green-100 text-green-700">git local + hook validate</span>
+  <span class="px-2 py-1 rounded-full bg-green-100 text-green-700">systemd actif (pi-mom direct)</span>
+</div>
+
+---
+layout: default
+---
+
+# Ce soir ou plus tard — GitHub <span class="text-gray-500 font-normal text-2xl">(optionnel)</span>
+
+<div class="text-sm text-gray-600 mb-4 max-w-3xl leading-relaxed">
+
+<strong>Ce n’est pas une « étape » du même genre</strong> que VPS ou Slack : c’est un <strong>bonus</strong> quand vous voudrez <strong>sauvegarder</strong> ou <strong>partager</strong> votre workspace hors du serveur.
+
+</div>
+
+<v-clicks>
+
+<ul class="text-sm text-gray-700 list-disc pl-6 max-w-3xl space-y-2 text-left">
+
+<li>Le script <strong>3</strong> ne pose <strong>aucune</strong> question GitHub — <strong>normal</strong>, ce n’est pas le critère de réussite du jour.</li>
+
+<li>Vous créerez un repo (souvent <strong>privé</strong>), une <strong>clé SSH</strong>, un remote <code>git@github.com:…</code>, puis <code>git push</code> — guidé dans <code>docs/MISSIONS.md</code> avec LE J.</li>
+
+<li><strong>Pas de push HTTPS</strong> sur ce parcours ; <code>.keys</code> et secrets <strong>jamais</strong> commités <em>(déjà exclus par <code>.gitignore</code>)</em>.</li>
+
+</ul>
+
+</v-clicks>
+
+<div v-click class="mt-5 p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900 max-w-3xl">
+
+💡 Si vous n’avez <strong>jamais</strong> utilisé Git : ce n’est <strong>pas</strong> un prérequis pour dire bonjour à votre agent dans Slack — on le fait ensemble <strong>après</strong>, au calme.
+
 </div>
 
 ---
@@ -1005,34 +1041,32 @@ et dis-moi de te redémarrer.
 layout: section
 ---
 
-# Bonus — pour aller plus loin
+# Après l'atelier
 
 ---
 layout: default
 ---
 
-# Cloudflare Voice — projet bonus
-
-**Vocal → site en ligne en quelques minutes** *(à essayer chez vous après le workshop)*
+# Missions — la suite sur ton VPS
 
 <v-clicks>
 
-1. Envoyer un **message vocal** dans Slack avec votre idée
-2. Si Slack a la transcription auto → la copier ; sinon, dictez sur votre téléphone
-3. Envoyer à l'agent :
+<ul class="text-sm space-y-4 max-w-3xl list-disc pl-6 text-left">
 
-```
-Utilise Cloudflare Pages (gratuit) pour créer et déployer :
-[votre idée].
-Donne-moi le lien quand c'est en ligne.
-```
+<li><strong>Personnaliser</strong> <code>SYSTEM.md</code> avec ton agent (Slack), puis <code>systemctl --user restart pi-mom</code>.</li>
 
-4. L'agent code, déploie, retourne le **lien du site**
+<li><strong>GitHub comme nuage</strong> : pousser <code>~/agent-workspace</code> en <strong>SSH</strong> — sauvegarde, historique, accès depuis n’importe où. Étapes détaillées : <code>docs/MISSIONS.md</code> du repo workshop.</li>
+
+<li><strong>Quand tout ça tourne</strong> → lance ton <strong>premier projet agentique</strong> : une mission claire dans Slack, travail sous <code>projects/&lt;nom&gt;/</code>, commits locaux puis <code>git push</code>.</li>
+
+</ul>
 
 </v-clicks>
 
-<div v-click class="mt-4 text-xs text-gray-500 italic">
-  La transcription Slack auto nécessite un plan payant. Sur un workspace gratuit : utilisez la dictée de votre téléphone.
+<div v-click class="mt-6 text-sm text-gray-600 max-w-3xl leading-snug">
+
+💡 Les **messages vocaux Slack** peuvent être **transcrits** par Slack selon ton workspace — inutile d’empiler un autre outil pour capturer une idée avant de la donner à l’agent.
+
 </div>
 
 ---
@@ -1055,13 +1089,14 @@ rm -f /etc/sudoers.d/90-fadas-agent</code></pre>
 </div>
 
 <div class="p-4 rounded-lg border border-red-300 bg-red-50">
-  <div class="font-medium text-red-900 mb-1">⚠️ Script 3 — "Container 'mom-sandbox' does not exist"</div>
+  <div class="font-medium text-red-900 mb-1">⚠️ Script 3 — service pi-mom inactif</div>
   <div class="text-sm text-red-800 mt-2">
-    Le daemon systemd n'a pas vu le groupe docker. Fix :
+    Vérifiez les logs et la config ; causes fréquentes : <code>.keys</code> manquant, <code>~/.pi/mom/auth.json</code>, ou lingering désactivé après déconnexion SSH.
   </div>
-<pre class="text-xs bg-white rounded p-2 mt-2 border border-red-200"><code>loginctl terminate-user $USER
-# Vous serez déconnecté → reconnectez-vous en SSH
-systemctl --user start pi-mom</code></pre>
+<pre class="text-xs bg-white rounded p-2 mt-2 border border-red-200"><code>tail -40 ~/.pi-mom.log
+systemctl --user status pi-mom
+loginctl show-user $USER | grep Linger    # doit afficher Linger=yes
+# sinon : sudo loginctl enable-linger $USER && systemctl --user restart pi-mom</code></pre>
 </div>
 
 </div>

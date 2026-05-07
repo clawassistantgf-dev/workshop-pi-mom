@@ -3,9 +3,11 @@
 # 02-install.sh — Installation de la stack agent
 # Workshop : Les Fadas de l'IA
 #
-# Lancement :
-#   curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/02-install.sh -o /tmp/ws-pi-mom-02-install.sh && bash /tmp/ws-pi-mom-02-install.sh
-# (évite bash <(curl) / /dev/fd/… sur certains hébergeurs)
+# Lancer en utilisateur normal (sudo dispo). Copier UNE ligne :
+# curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/02-install.sh -o /tmp/ws-pi-mom-02-install.sh && bash /tmp/ws-pi-mom-02-install.sh
+# Avec Docker en plus (optionnel) : INSTALL_DOCKER=1 bash /tmp/ws-pi-mom-02-install.sh
+# ou : bash /tmp/ws-pi-mom-02-install.sh --with-docker
+# Évite bash <(curl) et /dev/fd sur certains hébergeurs.
 #
 
 set -e
@@ -13,6 +15,16 @@ set -o pipefail
 
 # Évite « sh: husky: not found » pendant le lifecycle « prepare » du monorepo (atelier VPS).
 export HUSKY=0
+
+WANT_DOCKER=0
+for _arg in "$@"; do
+  if [ "$_arg" = "--with-docker" ]; then
+    WANT_DOCKER=1
+  fi
+done
+if [ "${INSTALL_DOCKER:-}" = "1" ]; then
+  WANT_DOCKER=1
+fi
 
 # ─────────────────────────────────────────────────────────
 # 0. Vérifications préalables
@@ -91,29 +103,33 @@ if ! grep -q "npm-global/bin" "$HOME/.bashrc" 2>/dev/null; then
 fi
 
 # ─────────────────────────────────────────────────────────
-# 4. Docker
+# 4. Docker (optionnel — pas requis pour pi-mom)
 # ─────────────────────────────────────────────────────────
 
-if command -v docker >/dev/null 2>&1; then
-  echo "✓ Docker déjà installé : $(docker --version)"
-else
-  echo "⏳ Installation de Docker (peut prendre 1-2 min)..."
-  curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
-  sudo sh /tmp/get-docker.sh >/dev/null 2>&1
-  rm -f /tmp/get-docker.sh
-  echo "✓ Docker installé : $(docker --version)"
-fi
+DOCKER_GROUP_NEW=0
+if [ "$WANT_DOCKER" -eq 1 ]; then
+  if command -v docker >/dev/null 2>&1; then
+    echo "✓ Docker déjà installé : $(docker --version)"
+  else
+    echo "⏳ Installation de Docker (peut prendre 1-2 min)..."
+    curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
+    sudo sh /tmp/get-docker.sh >/dev/null 2>&1
+    rm -f /tmp/get-docker.sh
+    echo "✓ Docker installé : $(docker --version)"
+  fi
 
-if ! groups "$USER" | grep -q '\bdocker\b'; then
-  echo "⏳ Ajout de $USER au groupe docker..."
-  sudo usermod -aG docker "$USER"
-  DOCKER_GROUP_NEW=1
+  if ! groups "$USER" | grep -q '\bdocker\b'; then
+    echo "⏳ Ajout de $USER au groupe docker..."
+    sudo usermod -aG docker "$USER"
+    DOCKER_GROUP_NEW=1
+  fi
 else
-  DOCKER_GROUP_NEW=0
+  echo "ℹ️  Docker non installé (optionnel). pi-mom ne l'utilise pas."
+  echo "   Pour ajouter Docker : relancez avec --with-docker ou INSTALL_DOCKER=1"
 fi
 
 # ─────────────────────────────────────────────────────────
-# 5. Lingering systemd user
+# 5. Lingering systemd user (service user actif sans session SSH — indépendant de Docker)
 # ─────────────────────────────────────────────────────────
 
 if ! loginctl show-user "$USER" 2>/dev/null | grep -q "Linger=yes"; then
@@ -237,7 +253,7 @@ npm install -g . --silent
 cd "$HOME"
 
 # ─────────────────────────────────────────────────────────
-# 8. Workspace agent + .gitignore
+# 8. Workspace agent + .gitignore (pi-mom ; pas Docker)
 # ─────────────────────────────────────────────────────────
 
 mkdir -p "$WORKSPACE"
@@ -276,28 +292,28 @@ else
   ALL_OK=0
 fi
 
-if DOCKER_VERSION=$(docker --version 2>/dev/null); then
-  echo "  ✓ Docker      $DOCKER_VERSION"
-else
-  echo "  ✗ Docker      ÉCHEC"
-  ALL_OK=0
-fi
-
-echo "  ⏳ Docker run hello-world..."
-if [ "$DOCKER_GROUP_NEW" -eq 1 ]; then
-  if sudo docker run --rm hello-world >/dev/null 2>&1; then
-    echo "  ✓ Docker run  OK (via sudo, groupe actif au prochain login)"
+if command -v docker >/dev/null 2>&1; then
+  if DOCKER_VERSION=$(docker --version 2>/dev/null); then
+    echo "  ✓ Docker      $DOCKER_VERSION"
+  fi
+  echo "  ⏳ Docker run hello-world..."
+  if [ "$DOCKER_GROUP_NEW" -eq 1 ]; then
+    if sudo docker run --rm hello-world >/dev/null 2>&1; then
+      echo "  ✓ Docker run  OK (via sudo, groupe actif au prochain login)"
+    else
+      echo "  ✗ Docker run  ÉCHEC"
+      ALL_OK=0
+    fi
   else
-    echo "  ✗ Docker run  ÉCHEC"
-    ALL_OK=0
+    if docker run --rm hello-world >/dev/null 2>&1; then
+      echo "  ✓ Docker run  OK"
+    else
+      echo "  ✗ Docker run  ÉCHEC"
+      ALL_OK=0
+    fi
   fi
 else
-  if docker run --rm hello-world >/dev/null 2>&1; then
-    echo "  ✓ Docker run  OK"
-  else
-    echo "  ✗ Docker run  ÉCHEC"
-    ALL_OK=0
-  fi
+  echo "  ⏭ Docker      (non installé — OK pour pi-mom)"
 fi
 
 if command -v pi >/dev/null 2>&1; then
@@ -345,17 +361,15 @@ echo "│  ✅ Stack installée !                               │"
 echo "└─────────────────────────────────────────────────────┘"
 echo
 
-if [ "$DOCKER_GROUP_NEW" -eq 1 ]; then
-  echo "  ⚠️  Reconnectez-vous (ou tapez : newgrp docker)"
-  echo "      pour activer le groupe docker sans sudo."
+if command -v docker >/dev/null 2>&1 && [ "$DOCKER_GROUP_NEW" -eq 1 ]; then
+  echo "⚠️ Docker : reconnectez-vous ou newgrp docker pour le groupe docker."
   echo
 fi
 
-echo "  📌 ÉTAPE SUIVANTE — Connecter votre LLM"
+echo "📌 ÉTAPE SUIVANTE — connecter votre LLM : lancer pi puis taper /login"
 echo
-echo "     pi"
-echo "     /login"
+echo "Pour relancer ce script plus tard (UNE ligne) :"
+echo "curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/02-install.sh -o /tmp/ws-pi-mom-02-install.sh && bash /tmp/ws-pi-mom-02-install.sh"
 echo
-echo "─────────────────────────────────────────────────────"
-echo "  Sources de pi-mom : $PI_MONO_DIR"
+echo "Sources de pi-mom : $PI_MONO_DIR"
 echo "─────────────────────────────────────────────────────"
