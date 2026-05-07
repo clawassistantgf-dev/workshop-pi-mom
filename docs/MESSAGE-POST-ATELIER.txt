@@ -23,7 +23,16 @@ En bref : une page web + un prompt guidé — tu n’es pas seul face à l’err
 
 ▸ 2 — Tu avais fini le setup (pi-mom qui tourne)
 
-Pour rester à jour (même chaîne que pendant l’atelier, sans passer par npm public) :
+Pourquoi on cite surtout le script 2 pour une mise à jour ?
+— Script 1 : sécurisation du serveur (root). À refaire surtout si nouvelle machine ou base réinstallée, pas à chaque version de pi-mom.
+— Script 2 : met à jour le programme pi-mom lui-même (CLI compilé / installé depuis le fork pi-mono). C’est la commande « mettre pi-mom à jour » quand le code du binaire change.
+— Script 3 : pose le workspace, Slack, systemd, etc. On ne le relance pas pour chaque mise à jour du binaire ; seulement si tu veux rejouer toute la config atelier (cas rare). Pour récupérer seulement une version récente des scripts 01/03 sans refaire toute l’install, voir UPDATE.md (curl du fichier voulu).
+
+Et SYSTEM.md, il se met à jour comment ?
+— C’est ton fichier dans le workspace sur le VPS (en pratique ~/agent-workspace/SYSTEM.md). Le script 3 le crée une première fois s’il manque ; après, les scripts atelier ne l’écrasent pas.
+— Pour le faire évoluer : tu l’édites toi-même (éditeur ou agent dans Slack), puis si besoin : systemctl --user restart pi-mom. Ce n’est pas le script 2 qui remplace ton SYSTEM.md : le script 2 ne concerne que le programme pi-mom, pas ton contenu agent.
+
+Pour mettre à jour le binaire pi-mom (même principe que pendant l’atelier, sans npm public) :
 
 Sur le VPS, en utilisateur normal, relance le script 2 :
 
@@ -35,7 +44,7 @@ Puis redémarre le service :
 
 systemctl --user restart pi-mom
 
-Ensuite, enchaîne les étapes post-atelier (SYSTEM.md, GitHub en SSH, premier projet dans projects/, etc.) — détaillées ici :
+Ensuite, enchaîne les étapes post-atelier (personnaliser SYSTEM.md, GitHub en SSH, premier projet dans projects/, etc.) — détaillées ici :
 https://github.com/clawassistantgf-dev/workshop-pi-mom/blob/main/docs/MISSIONS.md
 
 Mise à jour du binaire et des scripts : résumé ici :
