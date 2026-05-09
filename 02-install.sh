@@ -221,6 +221,12 @@ if ! env HUSKY=0 npm install -w "$WORKSPACE_PKG_NAME" --no-fund --no-audit --log
   env HUSKY=0 npm install --no-fund --no-audit --loglevel=warn
 fi
 
+if ! command -v tsgo >/dev/null 2>&1 && [ ! -x "$PI_MONO_DIR/node_modules/.bin/tsgo" ]; then
+  echo "⛔ tsgo introuvable après npm install"
+  echo "   → vérifier que les dépendances du monorepo ont bien été installées"
+  exit 1
+fi
+
 # Sans web-ui (gain de temps). Si la structure du fork change, repli sur « npm run build » racine.
 echo "⏳ Build des packages (ai → agent → tui → coding-agent) puis mom…"
 build_targeted() {
@@ -233,6 +239,7 @@ build_targeted() {
   done
   for rel in packages/ai packages/agent packages/tui packages/coding-agent; do
     echo "   → $rel"
+    (cd "$PI_MONO_DIR/$rel" && npx tsgo -p tsconfig.build.json)
     (cd "$PI_MONO_DIR/$rel" && npm run build)
   done
   echo "   → mom ($PI_MOM_DIR)"
