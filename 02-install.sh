@@ -5,8 +5,8 @@
 #
 # Lancer en utilisateur normal (sudo dispo). Copier UNE ligne :
 # curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/02-install.sh -o /tmp/ws-pi-mom-02-install.sh && bash /tmp/ws-pi-mom-02-install.sh
-# Avec Docker en plus (optionnel) : INSTALL_DOCKER=1 bash /tmp/ws-pi-mom-02-install.sh
-# ou : bash /tmp/ws-pi-mom-02-install.sh --with-docker
+# Avec Docker en plus (optionnel) : curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/02-install.sh -o /tmp/ws-pi-mom-02-install.sh && INSTALL_DOCKER=1 bash /tmp/ws-pi-mom-02-install.sh
+# ou : curl -fsSL https://raw.githubusercontent.com/clawassistantgf-dev/workshop-pi-mom/main/02-install.sh -o /tmp/ws-pi-mom-02-install.sh && bash /tmp/ws-pi-mom-02-install.sh --with-docker
 # Évite bash <(curl) et /dev/fd sur certains hébergeurs.
 #
 
