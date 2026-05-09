@@ -35,8 +35,9 @@ if [ "$EUID" -eq 0 ]; then
   exit 1
 fi
 
-if ! sudo -n apt-get --version >/dev/null 2>&1; then
-  echo "⛔ L'utilisateur n'a pas les droits sudo nécessaires."
+if ! sudo -n true >/dev/null 2>&1; then
+  echo "⛔ Ce script nécessite des droits sudo pour l'installation système (apt, linger, docker optionnel)."
+  echo "   → Si tu n'as pas sudo, fais l'installation manuelle ou utilise un user admin."
   exit 1
 fi
 
